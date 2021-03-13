@@ -1,15 +1,17 @@
 Data send to message borker(publisher)
 1. Laser sensors
-	{"laserId":0, "in":0, "out":0} // numbers could be positive integer or 0
-2. Infraed camera
-	{"cameraId":0, "secquenceNum":0, "temperature":36.5} // "secquenceNum" should be long type, "temperature" should be float
+	{"laserId":"laser0","in":0, "out":0} // numbers could be positive integer or 0
+Topic: /museumId/floorNum/gateNum
 
+2. Infraed camera
+	{"cameraId":"camera0", "secquenceNum":0, "temperature":36.5} // "secquenceNum" should be long type, "temperature" should be float
+Topic: /museumId/entranceId
 
 Data receive form message borker(subscriber)
 1. Motor controller
-	{"motroControlerId":0, "targetStatus":"open"} // value of "targetStatus" could be "open"/"close"
+	{"motroControlerId":"motor0", "targetStatus":"open"} // value of "targetStatus" could be "open"/"close"
 2. Light controller
-	{"lightControllerId":0, "brightness":0} // value of "brightness" could be in range [0,100], means(0% to 100%)
+	{"lightControllerId":"light0", "brightness":0} // value of "brightness" could be in range [0,100], means(0% to 100%)
 
 
 * A problem to discuss:

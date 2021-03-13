@@ -1,0 +1,36 @@
+Home Catalog works as sevice and decive regisrty syste, it will use REST apt for communication.
+
+Registration:
+1. Device registration (Using PUT, data write in the body in json format)
+	{"registerType":"device","Id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":floorId",enterZone":"zoneId","leavingZone":"zoneId"}}
+	{"registerType":"device","Id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"entrance1"}}
+	{"registerType":"device","Id":"motor0","type":"motorController","topic":"/museumId/...","attribute":{"enterZone":"zoneId","leavingZone":"zoneId"}}
+	{"registerType":"device","Id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"controlZone":"zoneId","currentSataus":"open","currentBrightness":50}}
+
+Return (in body):
+	{"registerStatus":"Success","errorCode":0}
+
+
+2. Service registration (Using PUT, data write in the body in json format)
+	{"registerType":"service","Id":"serviceId","type":"crowControl","attribute":{...}}
+
+Return (in body):
+	{"registerStatus":"Success","errorCode":0}
+
+
+3. Device/Service log out: (Using DELETE)
+	{"logOutType":"device","id":"laser0"}
+
+* no return value
+
+
+
+
+Resource acquire:
+Use GET, and specifiy the target resource with parameters
+eg,
+172.0.0.1:8080/device?type=laser&floor=2  ==> acquire all lasers in the second floor
+
+Return data in body
+	{devices:[{"deviceId":"","type":"","topic":"","attribute":{}},.......]}
+
