@@ -18,25 +18,29 @@ class HomeCat():
     def PUT(self):
         body = cherrypy.request.body.read()
         data = json.loads(body)
-        errorCode = ""
         errorCode = self.checkRegister(data)
-        if errorCode != "":
+        if errorCode is not None:
+            print("inError")
             self.registerStatus["registerStatus"] = "Fail"
             self.registerStatus["errorType"] = errorCode
-            return json.dump(self.registerStatus)
+            return json.dumps(self.registerStatus)
 
         if data['registerType'] == "device":
             self.devices.append(data)
         else:
             self.services.append(data)
         self.registerStatus["registerStatus"] = "Success"
-        self.registerStatus["errorCode"] = "None"
-        return json.dump(self.registerStatus)
+        self.registerStatus["errorType"] = "None"
+        print("in here")
+        json.dumps(self.registerStatus)
+        return json.dumps(self.registerStatus)
 
     def GET(self, *uri, **params):
+        # ToDo: add GET operation
         pass
 
     def DELETE(self):
+        # ToDo: add DELETE operation
         pass
 
     def checkRegister(self, data):
@@ -50,6 +54,18 @@ class HomeCat():
                 self.floor.index(data["attribute"]["floor"])
                 self.zones.index(data["attribute"]["enterZone"])
                 self.zones.index(data["attribute"]["leavingZone"])
+                print("pass here")
+            except:
+                return "Device attribute not valid"
+        elif data["registerType"] == "service":
+            # check service id
+            for ser in self.services:
+                if ser['id'] == data['id']:
+                    return "Id already exist"
+            # check device attributes
+            try:
+                # ToDo: add checking according service attribute
+                pass
             except:
                 return "Device attribute not valid"
 
@@ -61,7 +77,7 @@ if __name__ == "__main__":
             'tool.session.on': True
         }
     }
-
+    cherrypy.config.update({'server.socket_port':8090})
 cherrypy.quickstart(HomeCat("./configuration.json"), '/', conf)
 cherrypy.engine.start()
 cherrypy.engine.block()

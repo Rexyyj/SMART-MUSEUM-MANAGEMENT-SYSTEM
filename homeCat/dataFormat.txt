@@ -2,7 +2,7 @@ Home Catalog works as sevice and decive regisrty syste, it will use REST apt for
 
 Registration:
 1. Device registration (Using PUT, data write in the body in json format)
-	{"registerType":"device","id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":floorId",enterZone":"zoneId","leavingZone":"zoneId"}}
+	{"registerType":"device","id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
 	{"registerType":"device","id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"entrance1"}}
 	{"registerType":"device","id":"motor0","type":"motorController","topic":"/museumId/...","attribute":{"enterZone":"zoneId","leavingZone":"zoneId"}}
 	{"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"controlZone":"zoneId","currentSataus":"open","currentBrightness":50}}
