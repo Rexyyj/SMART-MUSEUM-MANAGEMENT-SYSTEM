@@ -86,9 +86,18 @@ class HomeCat():
                 # ToDo: add GET service operation
                 pass
 
-    def DELETE(self):
-        # ToDo: add DELETE operation
-        pass
+    def DELETE(self, *uri):
+        if len(uri)==2:
+            if uri[0] == "device":
+                for div in self.devices:
+                    if div["id"] == uri[1]:
+                        self.devices.remove(div)
+                        break
+            elif uri[0] == "service":
+                # ToDo: add DELETE operation
+                pass
+            else:
+                pass
 
     def checkRegister(self, data):
         if data["registerType"] == "device":
@@ -131,7 +140,9 @@ if __name__ == "__main__":
             'tool.session.on': True
         }
     }
-    cherrypy.config.update({'server.socket_port': 8090})
+# set this address to host ip address to enable dockers to use REST api
+# cherrypy.server.socket_host='192.168.43.122'
+cherrypy.config.update({'server.socket_port': 8090})
 cherrypy.quickstart(HomeCat("./configuration.json"), '/', conf)
 cherrypy.engine.start()
 cherrypy.engine.block()

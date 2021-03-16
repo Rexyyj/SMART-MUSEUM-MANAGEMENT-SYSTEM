@@ -32,8 +32,9 @@ Return (in body):
 
 
 3. Device/Service log out: (Using DELETE)
-	{"logOutType":"device","id":"laser0"}
-
+using:	172.0.0.1:8080/type/id
+    type: device,service
+* body is not allow in DELETE
 * no return value
 
 
