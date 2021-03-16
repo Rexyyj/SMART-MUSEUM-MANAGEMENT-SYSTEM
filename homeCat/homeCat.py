@@ -6,33 +6,35 @@ class HomeCat():
     exposed = True
 
     def __init__(self, configure):
-        museum = json.load(open(configure))
-        self.setting = museum
+        self.setting = json.load(open(configure))
         self.devices = []
         self.services = []
-        self.zones = museum['zones']
-        self.entrances = museum['entrances']
-        self.floor = museum["floors"]
-        self.registerStatus = {"registerStatus": "Success", "errorType": "None","setting":""}
-        self.getResult = {"status": "Success","failType":"None", "data": []}
+        self.registerStatus = {"status": "Success", "errorType": "None", "setting": ""}
+        self.getResult = {"status": "Success", "failType": "None", "data": []}
+
+    def set_getResult(self, status, failType, data):
+        self.getResult["status"] = status
+        self.getResult["failType"] = failType
+        self.getResult["data"] = data
+
+    def set_registerStatus(self, status, errorType, setting):
+        self.registerStatus["status"] = status
+        self.registerStatus["errorType"] = errorType
+        self.registerStatus["setting"] = setting
 
     def PUT(self):
         body = cherrypy.request.body.read()
         data = json.loads(body)
         errorCode = self.checkRegister(data)
         if errorCode is not None:
-            self.registerStatus["registerStatus"] = "Fail"
-            self.registerStatus["errorType"] = errorCode
-            self.registerStatus["setting"] = ""
+            self.set_registerStatus("Fail", errorCode, "")
             return json.dumps(self.registerStatus)
 
         if data['registerType'] == "device":
             self.devices.append(data)
         else:
             self.services.append(data)
-        self.registerStatus["registerStatus"] = "Success"
-        self.registerStatus["errorType"] = "None"
-        self.registerStatus["setting"]=self.setting
+        self.set_registerStatus("success", "None", self.setting)
         json.dumps(self.registerStatus)
         return json.dumps(self.registerStatus)
 
@@ -44,9 +46,7 @@ class HomeCat():
             elif uri[0] == "devices":
                 # check the registered device list is empty or not
                 if len(self.devices) == 0:
-                    self.getResult["status"] = "fail"
-                    self.getResult["failType"]="No device registered"
-                    self.getResult["data"] = []
+                    self.set_getResult("fail", "No such device registered", [])
                     return str(self.getResult)
                 # select the specific type of devices
                 searchDevice = []
@@ -56,39 +56,35 @@ class HomeCat():
                     for div in self.devices:
                         if div["type"] == uri[1]:
                             searchDevice.append(div)
+                    if len(searchDevice) == 0:
+                        self.set_getResult("fail", "No such device registered", [])
+                        return str(self.getResult)
                 else:
-                    self.getResult["status"] = "fail"
-                    self.getResult["failType"]="uri invalid"
-                    self.getResult["data"] = []
+                    self.set_getResult("fail", "uri invalid", [])
                     return str(self.getResult)
                 # filter out the devices not in target if param exist
                 if params != {}:
                     keys = params.keys()
-                    existKeys = self.devices[0]["attribute"].keys()
+                    existKeys = searchDevice[0]["attribute"].keys()
                     if len(list(list(set(keys) - set(existKeys)))) != 0:
-                        self.getResult["status"] = "fail"
-                        self.getResult["failType"]="param not exist"
-                        self.getResult["data"] = []
+                        self.set_getResult("fail", "param not exist", [])
                         return str(self.getResult)
                     data = searchDevice.copy()
                     for key in keys:
-                        for div in self.devices:
+                        for div in searchDevice:
                             if div["attribute"][key] != params[key]:
                                 try:
                                     data.remove(div)
                                 except:
                                     pass
-                    self.getResult["status"] = "success"
-                    self.getResult["failType"]="None"
-                    self.getResult["data"] = data
+                    self.set_getResult("success", "None", data)
                     return json.dumps(self.getResult)
                 else:
-                    self.getResult["status"] = "success"
-                    self.getResult["failType"]="None"
-                    self.getResult["data"] = searchDevice
+                    self.set_getResult("success", "None", searchDevice)
                     return json.dumps(self.getResult)
-
-        # ToDo: add GET operation
+            elif uri[0] == "service":
+                # ToDo: add GET service operation
+                pass
 
     def DELETE(self):
         # ToDo: add DELETE operation
@@ -102,9 +98,17 @@ class HomeCat():
                     return "Id already exist"
             # check device attributes
             try:
-                self.floor.index(data["attribute"]["floor"])
-                self.zones.index(data["attribute"]["enterZone"])
-                self.zones.index(data["attribute"]["leavingZone"])
+                if data["type"] == "laser" or data["type"] == "motorController":
+                    self.setting["floors"].index(data["attribute"]["floor"])
+                    self.setting["zones"].index(data["attribute"]["enterZone"])
+                    self.setting["zones"].index(data["attribute"]["leavingZone"])
+                elif data["type"] == "camera":
+                    self.setting["entrances"].index(data["attribute"]["entranceId"])
+                elif data["type"] == "lightController":
+                    self.setting["floors"].index(data["attribute"]["floor"])
+                    self.setting["zones"].index(data["attribute"]["controlZone"])
+                else:
+                    pass
             except:
                 return "Device attribute not valid"
         elif data["registerType"] == "service":
