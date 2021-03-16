@@ -1,4 +1,16 @@
 Home Catalog works as sevice and decive regisrty syste, it will use REST apt for communication.
+Museum setting:
+    Current format is:
+{
+  "museumId": "museum123",
+  "museumName": "Palazzo Reale",
+  "floors": ["1","2","3"],
+  "zones": ["zone1","zone2","zone3"],
+  "entrances": ["Entrance1","Entrance2"]
+}
+
+
+
 
 Registration:
 1. Device registration (Using PUT, data write in the body in json format)
@@ -8,7 +20,8 @@ Registration:
 	{"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"controlZone":"zoneId","currentSataus":"open","currentBrightness":50}}
 
 Return (in body):
-	{"registerStatus":"Success","errorCode":0}
+	{"registerStatus":"Success","errorType":"error type","setting":""}
+	"setting" is the general configuration of the entire museum, or general setting
 
 
 2. Service registration (Using PUT, data write in the body in json format)
@@ -29,8 +42,10 @@ Return (in body):
 Resource acquire:
 Use GET, and specifiy the target resource with parameters
 eg,
-172.0.0.1:8080/device?type=laser&floor=2  ==> acquire all lasers in the second floor
+172.0.0.1:8080/devices/type?floor=2&enterZone=zone1  ==> acquire all lasers in the second floor
+type is defined in uri
+attributes are defined in param
 
 Return data in body
-	{devices:[{"deviceId":"","type":"","topic":"","attribute":{}},.......]}
+	{status:"success","failType":"None",data:[{"deviceId":"","type":"","topic":"","attribute":{}},.......]}
 
