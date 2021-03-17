@@ -20,9 +20,9 @@ Registration:
 	{"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"floor":"1","controlZone":"zone1","currentSataus":"open","currentBrightness":50}}
 
 Return (in body):
-	{"status":"Success","errorType":"error type","setting":""}
+	{"status":"success","errorType":"error type","setting":""}
 	"setting" is the general configuration of the entire museum, or general setting
-
+    "status" could be : success or fail
 
 2. Service registration (Using PUT, data write in the body in json format)
 	{"registerType":"service","Id":"serviceId","type":"crowControl","attribute":{...}}

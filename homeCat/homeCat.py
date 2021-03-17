@@ -9,7 +9,7 @@ class HomeCat():
         self.setting = json.load(open(configure))
         self.devices = []
         self.services = []
-        self.registerStatus = {"status": "Success", "errorType": "None", "setting": ""}
+        self.registerStatus = {"status": "success", "errorType": "None", "setting": ""}
         self.getResult = {"status": "Success", "failType": "None", "data": []}
 
     def set_getResult(self, status, failType, data):
@@ -27,7 +27,7 @@ class HomeCat():
         data = json.loads(body)
         errorCode = self.checkRegister(data)
         if errorCode is not None:
-            self.set_registerStatus("Fail", errorCode, "")
+            self.set_registerStatus("fail", errorCode, "")
             return json.dumps(self.registerStatus)
 
         if data['registerType'] == "device":

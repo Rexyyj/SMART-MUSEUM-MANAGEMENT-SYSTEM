@@ -1,7 +1,7 @@
 Data send to message borker(publisher)
 1. Laser sensors
-	{"laserId":"laser0","in":0, "out":0} // numbers could be positive integer or 0
-Topic: /museumId/floorNum/gateNum
+	{"laserId":"laser0","timestamp":"","in":0, "out":0} // numbers could be positive integer or 0
+Topic: /museumId/floorNum/gateNum/laser
 
 2. Infraed camera
 	{"cameraId":"camera0", "secquenceNum":0, "temperature":36.5} // "secquenceNum" should be long type, "temperature" should be float
