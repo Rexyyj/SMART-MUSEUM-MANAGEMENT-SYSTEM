@@ -10,8 +10,8 @@ class LaserConnector():
     def __init__(self, confAddr):
         self.conf = json.load(open(confAddr))
         self.deviceId = self.conf["deviceId"]
-        self.client = MyMQTT(self.deviceId, self.conf["broker"], self.conf["port"], None)
-        self.switch = MyMQTT(self.deviceId, self.conf["broker"], self.conf["port"], self)
+        self.client = MyMQTT(self.deviceId, self.conf["broker"], int(self.conf["port"]), None)
+        self.switch = MyMQTT(self.deviceId, self.conf["broker"], int(self.conf["port"]), self)
         self.workingStatus = "on"
         self.modeFlag = ""
 
@@ -21,16 +21,17 @@ class LaserConnector():
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
-                  "topic": self.conf["topic"],
+                  "topic": self.topic,
                   "attribute": {"floor": self.conf["floor"],
                                 "enterZone": self.conf["enterZone"],
                                 "leavingZone": self.conf["leavingZone"]}}
         if (self.register(self.conf["homeCatAddress"], regMsg)) == 0:
             exit()
 
+
     def register(self, homeCat, regMsg):
         reg = requests.put(homeCat, json.dumps(regMsg))
-        response = json.load(reg)
+        response = json.loads(reg.text)
         if response["status"] == "fail":
             print("Register Fail!!!")
             print("Fail type: " + response["errorType"])

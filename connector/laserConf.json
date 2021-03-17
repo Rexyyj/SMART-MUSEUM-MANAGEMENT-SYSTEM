@@ -1,5 +1,5 @@
 {
-  "deviceId": "laser0",
+  "deviceId": "laser287513",
   "broker": "mqtt.eclipse.org",
   "port": 1883,
   "laserTopic": "/Polito/iot/SMMS/museum01/floor1/gate1/laser",
@@ -7,5 +7,5 @@
   "floor":"1",
   "enterZone":"zone1",
   "leavingZone":"zone2",
-  "homeCatAddress": "192.168.43.122:8090"
+  "homeCatAddress": "http://192.168.43.122:8090"
 }
