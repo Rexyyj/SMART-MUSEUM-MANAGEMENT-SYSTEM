@@ -66,7 +66,8 @@ class LaserConnector():
     def manual(self):
         while True:
             if self.workingStatus == "on":
-                print("Press q to leave manual mode, or enter the number of people entering zone:" + self.conf["enterZone"])
+                print("Press q to leave manual mode, or enter the number of people entering zone:" + self.conf[
+                    "enterZone"])
                 val1 = input()
                 if val1 == "q":
                     break
@@ -88,7 +89,7 @@ class LaserConnector():
                     print("Record data file not found")
                     continue
                 for data in datas["data"]:
-                    self.publish(int(data["in"]),int(data["out"]))
+                    self.publish(int(data["in"]), int(data["out"]))
                     time.sleep(10)
 
     # def modeReader(self):
@@ -114,7 +115,5 @@ if __name__ == "__main__":
             laserConnector.manual()
         elif mode == "a":
             laserConnector.automatic()
-
-
 
     laserConnector.stop()
