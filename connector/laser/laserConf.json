@@ -1,6 +1,6 @@
 {
   "deviceId": "laser287513",
-  "broker": "mqtt.eclipse.org",
+  "broker": "test.mosquitto.org",
   "port": 1883,
   "laserTopic": "/Polito/iot/SMMS/museum01/floor1/gate1/laser",
   "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch",

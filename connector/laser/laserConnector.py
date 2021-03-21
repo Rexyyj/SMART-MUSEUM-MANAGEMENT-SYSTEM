@@ -1,33 +1,34 @@
 from MyMQTT import *
 import requests
 import json
-import threading
 import time
 
 
 class LaserConnector():
 
     def __init__(self, confAddr):
-        self.conf = json.load(open(confAddr))
+        try:
+            self.conf = json.load(open(confAddr))
+        except:
+            print("Configuration file not found")
+            exit()
         self.deviceId = self.conf["deviceId"]
-        self.client = MyMQTT(self.deviceId, self.conf["broker"], int(self.conf["port"]), None)
-        self.switch = MyMQTT(self.deviceId, self.conf["broker"], int(self.conf["port"]), self)
+        self.client = MyMQTT(self.deviceId, self.conf["broker"], int(self.conf["port"]), self)
         self.workingStatus = "on"
-        self.modeFlag = ""
 
-        self.topic = self.conf["laserTopic"]
+        self.laserTopic = self.conf["laserTopic"]
+        self.switchTopic = self.conf["switchTopic"]
         self.__msg = {"laserId": self.deviceId, "timestamp": "", "in": 0, "out": 0}
         self.museumSetting = {}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
-                  "topic": self.topic,
+                  "topic": self.laserTopic,
                   "attribute": {"floor": self.conf["floor"],
                                 "enterZone": self.conf["enterZone"],
                                 "leavingZone": self.conf["leavingZone"]}}
         if (self.register(self.conf["homeCatAddress"], regMsg)) == 0:
             exit()
-
 
     def register(self, homeCat, regMsg):
         reg = requests.put(homeCat, json.dumps(regMsg))
@@ -43,19 +44,18 @@ class LaserConnector():
 
     def start(self):
         self.client.start()
-        self.switch.start()
+        self.client.mySubscribe(self.switchTopic)
 
     def stop(self):
         self.client.stop()
-        self.switch.stop()
-        requests.delete(self.conf["homeCatAddress"] + "/laser/" + self.conf["deviceId"])
+        requests.delete(self.conf["homeCatAddress"] + "/device/" + self.conf["deviceId"])
 
     def publish(self, inNum, outNum):
         msg = self.__msg
         msg["timestamp"] = str(time.time())
         msg["in"] = inNum
         msg["out"] = outNum
-        self.client.myPublish(self.topic, msg)
+        self.client.myPublish(self.laserTopic, msg)
         print("Published: " + json.dumps(msg))
 
     def notify(self, topic, msg):
@@ -64,10 +64,9 @@ class LaserConnector():
         self.workingStatus = "on"
 
     def manual(self):
-        while self.modeFlag == "m":
+        while True:
             if self.workingStatus == "on":
-                print("Press q to leave manual mode, or")
-                print("Enter the number of people entering zone:" + self.conf["enterZone"])
+                print("Press q to leave manual mode, or enter the number of people entering zone:" + self.conf["enterZone"])
                 val1 = input()
                 if val1 == "q":
                     break
@@ -78,32 +77,44 @@ class LaserConnector():
                 time.sleep(1)
 
     def automatic(self):
-        while self.modeFlag == "a":
-            pass
-        else:
-            time.sleep(1)
-
-    def modeReader(self):
         while True:
-            if self.workingStatus != "m":
-                self.modeFlag = input()
+            flag = input("Enter the location of recorded data or enter q to leave: ")
+            if flag == "q":
+                break
+            else:
+                try:
+                    datas = json.load(open(flag))
+                except:
+                    print("Record data file not found")
+                    continue
+                for data in datas["data"]:
+                    self.publish(int(data["in"]),int(data["out"]))
+                    time.sleep(10)
+
+    # def modeReader(self):
+    #     print("reader running")
+    #     while True:
+    #         if self.workingStatus != "m":
+    #             self.modeFlag = input()
 
 
 if __name__ == "__main__":
-    laserConnector = LaserConnector("./laserConf.json")
+
+    laserConnector = LaserConnector(input("Enter the location of configuration file: "))
     laserConnector.start()
-    print("Please choose the working mode:")
-    print("m: manual, a: automatic, q: quit")
+    time.sleep(1)
 
-    threads = []
-    threads.append(threading.Thread(target=laserConnector.modeReader()))
-    threads.append(threading.Thread(target=laserConnector.automatic()))
-    threads.append(threading.Thread(target=laserConnector.manual()))
+    while True:
+        print("Please choose the working mode:")
+        print("m: manual, a: automatic, q: quit")
+        mode = input()
+        if mode == "q":
+            break;
+        elif mode == "m":
+            laserConnector.manual()
+        elif mode == "a":
+            laserConnector.automatic()
 
-    for i in range(len(threads)):
-        threads[i].start()
 
-    while laserConnector.modeFlag != "q":
-        time.sleep(1)
 
     laserConnector.stop()
