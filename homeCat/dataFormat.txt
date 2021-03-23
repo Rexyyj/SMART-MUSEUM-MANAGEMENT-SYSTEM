@@ -15,7 +15,7 @@ Museum setting:
 Registration:
 1. Device registration (Using PUT, data write in the body in json format)
 	{"registerType":"device","id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
-	{"registerType":"device","id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"Entrance1","motroControllerId":"motor123"}}
+	{"registerType":"device","id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"Entrance1","motroControllerId":"motor123","RESTaddr":"https://192.168.123.1"}}
 	{"registerType":"device","id":"motor0","type":"motorController","topic":"/museumId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
 	{"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"floor":"1","controlZone":"zone1","currentSataus":"open","currentBrightness":50}}
 

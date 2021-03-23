@@ -1,5 +1,5 @@
 from common.MyMQTT import *
-import requests
+from common.RegManager import *
 import json
 import time
 
@@ -19,7 +19,6 @@ class LaserConnector():
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
         self.__msg = {"laserId": self.deviceId, "timestamp": "", "in": 0, "out": 0}
-        self.museumSetting = {}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -27,20 +26,11 @@ class LaserConnector():
                   "attribute": {"floor": self.conf["floor"],
                                 "enterZone": self.conf["enterZone"],
                                 "leavingZone": self.conf["leavingZone"]}}
-        if (self.register(self.conf["homeCatAddress"], regMsg)) == 0:
-            exit()
+        self.Reg = RegManager(self.conf["homeCatAddress"])
+        self.museumSetting = self.Reg.register(regMsg)
 
-    def register(self, homeCat, regMsg):
-        reg = requests.put(homeCat, json.dumps(regMsg))
-        response = json.loads(reg.text)
-        if response["status"] == "fail":
-            print("Register Fail!!!")
-            print("Fail type: " + response["errorType"])
-            return 0
-        else:
-            print("Register Success")
-            self.museumSetting = response["setting"]
-            return 1
+        if self.museumSetting == "":
+            exit()
 
     def start(self):
         self.client.start()
@@ -48,7 +38,7 @@ class LaserConnector():
 
     def stop(self):
         self.client.stop()
-        requests.delete(self.conf["homeCatAddress"] + "/device/" + self.conf["deviceId"])
+        self.Reg.delete("device", self.conf["deviceId"])
 
     def publish(self, inNum, outNum):
         msg = self.__msg
