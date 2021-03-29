@@ -1,0 +1,6 @@
+{
+  "tokenBot": "1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ",
+  "bot": "Smartmubot",
+  "chatIDs": ["chatID1","chatID2","chatID3"],
+  "message": ["switchon","switchoff","start"],
+}
