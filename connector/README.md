@@ -23,7 +23,7 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 4.  To run other connectors, use the similar command as step 2
 5.  The ImageManger should run in a independent terminal together with cameraConnector to achieve full function of cameraConnector.
 
-## Data Format
+## Communication Data Format
 * Data send to message borker(publisher)
   1. Laser sensors
    <br>{"laserId":"laser0","timestamp":"","enter":0, "leaving":0} 
@@ -44,3 +44,17 @@ This folder contains the implementation of connectors form Smart Museum Manageme
     2. Light controller
 	<br>{"lightControllerId":"light0","timestamp":"" "brightness":0}
 	<br>// value of "brightness" could be in range [0,100], means(0% to 100%)
+
+## Registration Data Format
+  
+1. Laser
+<br>{"registerType":"device","id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
+
+2. Camera
+<br>{"registerType":"device","id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"Entrance1","motroControllerId":"motor123","RESTaddr":"https://192.168.123.1:8090"}}
+
+3. Motor
+<br>{"registerType":"device","id":"motor0","type":"motorController","topic":"/museumId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
+
+4. Light
+<br>{"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"floor":"1","controlZone":"zone1","currentSataus":"open","currentBrightness":50}}
