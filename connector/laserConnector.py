@@ -18,7 +18,7 @@ class LaserConnector():
 
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"laserId": self.deviceId, "timestamp": "", "in": 0, "out": 0}
+        self.__msg = {"laserId": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -43,8 +43,8 @@ class LaserConnector():
     def publish(self, inNum, outNum):
         msg = self.__msg
         msg["timestamp"] = str(time.time())
-        msg["in"] = inNum
-        msg["out"] = outNum
+        msg["enter"] = inNum
+        msg["leaving"] = outNum
         self.client.myPublish(self.laserTopic, msg)
         print("Published: " + json.dumps(msg))
 
@@ -79,7 +79,7 @@ class LaserConnector():
                     print("Record data file not found")
                     continue
                 for data in datas["data"]:
-                    self.publish(int(data["in"]), int(data["out"]))
+                    self.publish(int(data["enter"]), int(data["leaving"]))
                     time.sleep(10)
 
     # def modeReader(self):

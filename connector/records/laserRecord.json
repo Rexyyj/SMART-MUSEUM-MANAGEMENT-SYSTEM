@@ -1,15 +1,24 @@
 {
   "data": [
-    {"in": 1, "out": 0},
-    {"in": 2, "out": 0},
-    {"in": 3, "out": 2},
-    {"in": 4, "out": 3},
-    {"in": 5, "out": 5},
-    {"in": 6, "out": 0},
-    {"in": 7, "out": 6},
-    {"in": 8, "out": 0},
-    {"in": 9, "out": 15},
-    {"in": 10, "out": 3},
-    {"in": 1, "out": 0}
+    {
+      "enter": 2, "leaving": 0},
+    {
+      "enter": 3, "leaving": 2},
+    {
+      "enter": 4, "leaving": 3},
+    {
+      "enter": 5, "leaving": 5},
+    {
+      "enter": 6, "leaving": 0},
+    {
+      "enter": 7, "leaving": 6},
+    {
+      "enter": 8, "leaving": 0},
+    {
+      "enter": 9, "leaving": 15},
+    {
+      "enter": 10, "leaving": 3},
+    {
+      "enter": 1, "leaving": 0}
   ]
 }
