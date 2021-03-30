@@ -67,7 +67,7 @@ class LaserConnector():
             else:
                 time.sleep(1)
 
-    def automatic(self):
+    def replay(self):
         while True:
             flag = input("Enter the location of recorded data or enter q to leave: ")
             if flag == "q":
@@ -97,13 +97,13 @@ if __name__ == "__main__":
 
     while True:
         print("Please choose the working mode:")
-        print("m: manual, a: automatic, q: quit")
+        print("m: manual, r: replay, q: quit")
         mode = input()
         if mode == "q":
             break;
         elif mode == "m":
             laserConnector.manual()
-        elif mode == "a":
-            laserConnector.automatic()
+        elif mode == "r":
+            laserConnector.replay()
 
     laserConnector.stop()
