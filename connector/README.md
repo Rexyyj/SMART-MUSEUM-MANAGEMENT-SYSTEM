@@ -26,24 +26,27 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 ## Communication Data Format
 * Data send to message borker(publisher)
   1. Laser sensors
-   <br>{"laserId":"laser0","timestamp":"","enter":0, "leaving":0} 
-   <br>//numbers could be positive integer or 0
-   <br>Topic: /museumId/floorNum/gateNum/laser
+   <br>Topic:   /museumId/floorNum/gateNum/laser
+   <br>Message: {"laserId":"laser0","timestamp":"","enter":0, "leaving":0} 
+   <br>Note: numbers could be positive integer or 0
+   <br/>
 
     2. Infraed camera
-	<br>{"cameraId":"camera0","timestamp":"","sequenceNum":0, "temperature":36.5} 
-	<br>// "secquenceNum" should be double type, "temperature" should be float
-    <br>Topic: /museumId/entranceId
-
+    <br>Topic:  /museumId/entranceId
+	<br>Message:{"cameraId":"camera0","timestamp":"","sequenceNum":0, "temperature":36.5} 
+	<br>Note:   "secquenceNum" should be double type, "temperature" should be float
+    <br/>    
 
 * Data receive form message borker(subscriber)
     1. Motor controller
-	<br>{"motroControlerId":"motor0","timestamp":"", "targetStatus":"open"}
-	<br>// value of "targetStatus" could be "open"/"close"
+    <br>Topic:  
+	<br>Message:{"motroControlerId":"motor0","timestamp":"", "targetStatus":"open"}
+	<br>Note:   value of "targetStatus" could be "open"/"close"
     
     2. Light controller
-	<br>{"lightControllerId":"light0","timestamp":"" "brightness":0}
-	<br>// value of "brightness" could be in range [0,100], means(0% to 100%)
+    <br>Topic:  
+	<br>Message:{"lightControllerId":"light0","timestamp":"" "brightness":0}
+	<br>Note:   value of "brightness" could be in range [0,100], means(0% to 100%)
 
 ## Registration Data Format
   
