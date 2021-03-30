@@ -2,11 +2,12 @@
 This folder contains the implementation of connectors form Smart Museum Management System project.
 
 ## Run the connectors
-1.  Go to connector root directory:
+1.  Before running connectors, homeCat should be running first. See README.md under homeCat folder.
+2.  Go to connector root directory:
     ```
     $ cd connector
     ```
-2.  Run laserConnector with:
+3.  Run laserConnector with:
     ```
     $ python laserConnector.py
     
@@ -19,8 +20,8 @@ This folder contains the implementation of connectors form Smart Museum Manageme
     ./record/laserRecord.json
     
     ```
-3.  To run other connectors, use the similar command as step 2
-4.  The ImageManger should run in a independent terminal together with cameraConnector to achieve full function of cameraConnector.
+4.  To run other connectors, use the similar command as step 2
+5.  The ImageManger should run in a independent terminal together with cameraConnector to achieve full function of cameraConnector.
 
 ## Data Format
 * Data send to message borker(publisher)
