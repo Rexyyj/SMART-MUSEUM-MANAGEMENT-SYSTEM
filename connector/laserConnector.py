@@ -1,5 +1,5 @@
-from MyMQTT import *
-import requests
+from common.MyMQTT import *
+from common.RegManager import *
 import json
 import time
 
@@ -18,8 +18,7 @@ class LaserConnector():
 
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"laserId": self.deviceId, "timestamp": "", "in": 0, "out": 0}
-        self.museumSetting = {}
+        self.__msg = {"laserId": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -27,20 +26,11 @@ class LaserConnector():
                   "attribute": {"floor": self.conf["floor"],
                                 "enterZone": self.conf["enterZone"],
                                 "leavingZone": self.conf["leavingZone"]}}
-        if (self.register(self.conf["homeCatAddress"], regMsg)) == 0:
-            exit()
+        self.Reg = RegManager(self.conf["homeCatAddress"])
+        self.museumSetting = self.Reg.register(regMsg)
 
-    def register(self, homeCat, regMsg):
-        reg = requests.put(homeCat, json.dumps(regMsg))
-        response = json.loads(reg.text)
-        if response["status"] == "fail":
-            print("Register Fail!!!")
-            print("Fail type: " + response["errorType"])
-            return 0
-        else:
-            print("Register Success")
-            self.museumSetting = response["setting"]
-            return 1
+        if self.museumSetting == "":
+            exit()
 
     def start(self):
         self.client.start()
@@ -48,13 +38,13 @@ class LaserConnector():
 
     def stop(self):
         self.client.stop()
-        requests.delete(self.conf["homeCatAddress"] + "/device/" + self.conf["deviceId"])
+        self.Reg.delete("device", self.conf["deviceId"])
 
     def publish(self, inNum, outNum):
         msg = self.__msg
         msg["timestamp"] = str(time.time())
-        msg["in"] = inNum
-        msg["out"] = outNum
+        msg["enter"] = inNum
+        msg["leaving"] = outNum
         self.client.myPublish(self.laserTopic, msg)
         print("Published: " + json.dumps(msg))
 
@@ -66,7 +56,8 @@ class LaserConnector():
     def manual(self):
         while True:
             if self.workingStatus == "on":
-                print("Press q to leave manual mode, or enter the number of people entering zone:" + self.conf["enterZone"])
+                print("Press q to leave manual mode, or enter the number of people entering zone:" + self.conf[
+                    "enterZone"])
                 val1 = input()
                 if val1 == "q":
                     break
@@ -76,7 +67,7 @@ class LaserConnector():
             else:
                 time.sleep(1)
 
-    def automatic(self):
+    def replay(self):
         while True:
             flag = input("Enter the location of recorded data or enter q to leave: ")
             if flag == "q":
@@ -88,7 +79,7 @@ class LaserConnector():
                     print("Record data file not found")
                     continue
                 for data in datas["data"]:
-                    self.publish(int(data["in"]),int(data["out"]))
+                    self.publish(int(data["enter"]), int(data["leaving"]))
                     time.sleep(10)
 
     # def modeReader(self):
@@ -106,15 +97,13 @@ if __name__ == "__main__":
 
     while True:
         print("Please choose the working mode:")
-        print("m: manual, a: automatic, q: quit")
+        print("m: manual, r: replay, q: quit")
         mode = input()
         if mode == "q":
             break;
         elif mode == "m":
             laserConnector.manual()
-        elif mode == "a":
-            laserConnector.automatic()
-
-
+        elif mode == "r":
+            laserConnector.replay()
 
     laserConnector.stop()
