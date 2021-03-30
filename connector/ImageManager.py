@@ -38,18 +38,16 @@ class ImageManager():
         im = pickle.loads(imdata)
         return im
 
-
-
-if __name__ == "__main__":
+if __name__=="__main__":
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
             'tool.session.on': True
         }
     }
-# set this address to host ip address to enable dockers to use REST api
-cherrypy.server.socket_host = '192.168.43.122'
-cherrypy.config.update({'server.socket_port': 8090})
-cherrypy.quickstart(ImageManager("../records/images/"), '/', conf)
-cherrypy.engine.start()
-cherrypy.engine.block()
+    # set this address to host ip address to enable dockers to use REST api
+    cherrypy.server.socket_host='192.168.43.122'
+    cherrypy.config.update({'server.socket_port': 8091})
+    cherrypy.quickstart(ImageManager("./records/images"), '/',config=conf)
+    cherrypy.engine.start()
+    cherrypy.engine.block()

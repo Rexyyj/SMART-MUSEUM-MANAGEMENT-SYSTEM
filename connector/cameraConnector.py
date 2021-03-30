@@ -2,11 +2,12 @@ from common.MyMQTT import *
 from common.RegManager import *
 import json
 import time
+import threading
 
 
-class cameraConnector():
+class CameraConnector():
 
-    def __init__(self):
+    def __init__(self, confAddr):
         try:
             self.conf = json.load(open(confAddr))
         except:
@@ -18,16 +19,16 @@ class cameraConnector():
 
         self.cameraTopic = self.conf["cameraTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"cameraId":self.deviceId,"timestamp":"", "sequenceNum":0, "temperature":0}
+        self.__msg = {"cameraId": self.deviceId, "timestamp": "", "sequenceNum": 0, "temperature": 0}
         self.sequenceNum = 0
 
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "camera",
                   "topic": self.cameraTopic,
-                  "attribute": {"entranceId":self.conf ["entranceId"],
-                                "motorControllerId":self.conf["motorControllerId"],
-                                "RESTaddr":self.conf["RESTaddr"]}
+                  "attribute": {"entranceId": self.conf["entranceId"],
+                                "motorControllerId": self.conf["motorControllerId"],
+                                "RESTaddr": self.conf["RESTaddr"]}
                   }
         self.Reg = RegManager(self.conf["homeCatAddress"])
         self.museumSetting = self.Reg.register(regMsg)
@@ -42,7 +43,7 @@ class cameraConnector():
         self.client.stop()
         self.Reg.delete("device", self.conf["deviceId"])
 
-    def publish(self,sequenceNum ,temp):
+    def publish(self, sequenceNum, temp):
         msg = self.__msg
         msg["timestamp"] = str(time.time())
         msg["sequenceNum"] = sequenceNum
@@ -54,3 +55,44 @@ class cameraConnector():
         data = json.load(msg)
         # ToDo: update process of input msg
         self.workingStatus = "on"
+
+    def replay(self):
+        record = input("Input the record file: ")
+        while True:
+            try:
+                datas = json.load(open(record))
+            except:
+                print("Record file not exist")
+                continue
+            for data in datas["data"]:
+                self.publish(data["sequence"], data["temp"])
+                time.sleep(5)
+            option = input("Input r: replay, q: quit\n")
+            if option == "r":
+                continue
+            else:
+                break
+
+    def automatic(self):
+        pass
+
+
+if __name__ == "__main__":
+
+    cameraConnector = CameraConnector(input("Enter the location of configuration file: "))
+
+    cameraConnector.start()
+    time.sleep(1)
+
+    while True:
+        print("Please choose the working mode:")
+        print("r: replay, a: automatic q: quit")
+        mode = input()
+        if mode == "q":
+            break
+        elif mode == "r":
+            cameraConnector.replay()
+        elif mode == "a":
+            cameraConnector.automatic()
+
+    cameraConnector.stop()
