@@ -24,19 +24,56 @@ Before running homeCat, you should first define the general setting of the museu
 * **Devices** (Using PUT, data write in the body in json format)
     1. Laser
     ```
-    {"registerType":"device","id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
+    {
+    "registerType":"device",
+    "id":"laser0",
+    "type":"laser",
+    "topic":"/museumeId/...",
+    "attribute":{
+        "floor":"1",
+        "enterZone":"zone1",
+        "leavingZone":"zone2"}
+    }
     ```
     2. Camera
     ```
-    {"registerType":"device","id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"Entrance1","motroControllerId":"motor123","RESTaddr":"https://192.168.123.1:8090"}}
+    {
+    "registerType":"device",
+    "id":"camera0",
+    "type":"camera",
+    "topic":"/museumId/...",
+    "attribute":{
+        "entranceId":"Entrance1",
+        "motroControllerId":"motor123",
+        "RESTaddr":"https://192.168.123.1:8090"}
+    }
     ```
     3. Motor
     ```
-    {"registerType":"device","id":"motor0","type":"motorController","topic":"/museumId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
+    {
+    "registerType":"device",
+    "id":"motor0",
+    "type":"motorController",
+    "topic":"/museumId/...",
+    "attribute":{
+        "floor":"1",
+        "enterZone":"zone1",
+        "leavingZone":"zone2"}
+    }
     ```
     4. Light
     ```
-    {"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"floor":"1","controlZone":"zone1","currentSataus":"open","currentBrightness":50}}
+    {
+    "registerType":"device",
+    "id":"light0",
+    "type":"lightController",
+    "topic":"/museumId/...",
+    "attribute":{
+        "floor":"1",
+        "controlZone":"zone1",
+        "currentSataus":"open",
+        "currentBrightness":50}
+    }
     ```
     * Return (in body):
 	<br>Format: 
@@ -51,15 +88,30 @@ Before running homeCat, you should first define the general setting of the museu
 * **Services** (Using PUT, data write in the body in json format)
 	1. Telegram
 	```
-	{"registerType":"service","Id":"serviceId","type":"crowControl","attribute":{...}}
+	{
+    "registerType":"service",
+    "Id":"serviceId",
+    "type":"crowControl",
+    "attribute":{...}
+    }
     ```
     2. Crow Management
     ```
-	{"registerType":"service","Id":"serviceId","type":"crowControl","attribute":{...}}
+	{
+    "registerType":"service",
+    "Id":"serviceId",
+    "type":"crowControl",
+    "attribute":{...}
+    }
     ```
     3. Health Management
     ```
-    {"registerType":"service","Id":"serviceId","type":"crowControl","attribute":{...}}
+    {
+    "registerType":"service",
+    "Id":"serviceId",
+    "type":"crowControl",
+    "attribute":{...}
+    }
     ```
     * Return (in body):
 	```

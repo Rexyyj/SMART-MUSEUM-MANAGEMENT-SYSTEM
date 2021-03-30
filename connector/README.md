@@ -51,19 +51,56 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 ## Registration Data Format
 1. Laser
 ```
-{"registerType":"device","id":"laser0","type":"laser","topic":"/museumeId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
+{
+"registerType":"device",
+"id":"laser0",
+"type":"laser",
+"topic":"/museumeId/...",
+"attribute":{
+    "floor":"1",
+    "enterZone":"zone1",
+    "leavingZone":"zone2"}
+}
 ```
 2. Camera
 ```
-{"registerType":"device","id":"camera0","type":"camera","topic":"/museumId/...","attribute":{"entranceId":"Entrance1","motroControllerId":"motor123","RESTaddr":"https://192.168.123.1:8090"}}
+{
+"registerType":"device",
+"id":"camera0",
+"type":"camera",
+"topic":"/museumId/...",
+"attribute":{
+    "entranceId":"Entrance1",
+    "motroControllerId":"motor123",
+    "RESTaddr":"https://192.168.123.1:8090"}
+}
 ```
 3. Motor
 ```
-{"registerType":"device","id":"motor0","type":"motorController","topic":"/museumId/...","attribute":{"floor":"1","enterZone":"zone1","leavingZone":"zone2"}}
+{
+"registerType":"device",
+"id":"motor0",
+"type":"motorController",
+"topic":"/museumId/...",
+"attribute":{
+    "floor":"1",
+    "enterZone":"zone1",
+    "leavingZone":"zone2"}
+}
 ```
 4. Light
 ```
-{"registerType":"device","id":"light0","type":"lightController","topic":"/museumId/...","attribute":{"floor":"1","controlZone":"zone1","currentSataus":"open","currentBrightness":50}}
+{
+"registerType":"device",
+"id":"light0",
+"type":"lightController",
+"topic":"/museumId/...",
+"attribute":{
+    "floor":"1",
+    "controlZone":"zone1",
+    "currentSataus":"open",
+    "currentBrightness":50}
+}
 ```
 * Return (in body):
 <br>Format: 
