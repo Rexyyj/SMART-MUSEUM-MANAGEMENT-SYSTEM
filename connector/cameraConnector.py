@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Time    : 3/31/2021 3:08 PM
+# @Author  : Rex Yu
+# @Mail    : jiafish@outlook.com
+# @Github  : https://github.com/Rexyyj
+
 from common.MyMQTT import *
 from common.RegManager import *
 import json
@@ -19,7 +25,7 @@ class CameraConnector():
 
         self.cameraTopic = self.conf["cameraTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"cameraId": self.deviceId, "timestamp": "", "sequenceNum": 0, "temperature": 0}
+        self.__msg = {"id": self.deviceId, "timestamp": "", "sequenceNum": 0, "temperature": 0}
         self.sequenceNum = 0
 
         regMsg = {"registerType": "device",
@@ -52,17 +58,18 @@ class CameraConnector():
         print("Published: " + json.dumps(msg))
 
     def notify(self, topic, msg):
-        data = json.load(msg)
+        data = json.loads(msg)
+        print(json.dumps(data))
         # ToDo: update process of input msg
         self.workingStatus = "on"
 
     def replay(self):
-        record = input("Input the record file: ")
         while True:
+            record = input("Input the record file: ")
             try:
                 datas = json.load(open(record))
             except:
-                print("Record file not exist")
+                print("The record file not exist!")
                 continue
             for data in datas["data"]:
                 self.publish(data["sequence"], data["temp"])

@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Time    : 3/31/2021 3:08 PM
+# @Author  : Rex Yu
+# @Mail    : jiafish@outlook.com
+# @Github  : https://github.com/Rexyyj
+
 from common.MyMQTT import *
 from common.RegManager import *
 import json
@@ -18,7 +24,7 @@ class LaserConnector():
 
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"laserId": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
+        self.__msg = {"id": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -49,7 +55,8 @@ class LaserConnector():
         print("Published: " + json.dumps(msg))
 
     def notify(self, topic, msg):
-        data = json.load(msg)
+        data = json.loads(msg)
+        print(json.dumps(data))
         # ToDo: update process of input msg
         self.workingStatus = "on"
 

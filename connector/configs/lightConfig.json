@@ -1,0 +1,10 @@
+{
+  "deviceId": "light287513",
+  "broker": "test.mosquitto.org",
+  "port": 1883,
+  "lightTopic": "/Polito/iot/SMMS/museum01/floor1/gate1/light",
+  "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch",
+  "floor":"1",
+  "controlZone":"zone1",
+  "homeCatAddress": "http://192.168.43.122:8090"
+}
