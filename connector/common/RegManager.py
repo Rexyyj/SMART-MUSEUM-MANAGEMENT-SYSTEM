@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+# @Time    : 3/31/2021 3:08 PM
+# @Author  : Rex Yu
+# @Mail    : jiafish@outlook.com
+# @Github  : https://github.com/Rexyyj
+
 import requests
 import json
 
