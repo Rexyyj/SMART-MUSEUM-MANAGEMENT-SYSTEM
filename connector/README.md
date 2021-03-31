@@ -85,7 +85,8 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 "attribute":{
     "floor":"1",
     "enterZone":"zone1",
-    "leavingZone":"zone2"}
+    "leavingZone":"zone2",
+    "currentStatus":"close"}
 }
 ```
 4. Light
