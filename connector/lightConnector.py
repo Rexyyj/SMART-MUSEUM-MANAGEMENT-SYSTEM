@@ -48,18 +48,19 @@ class LightConnector():
         self.Reg.delete("device", self.conf["deviceId"])
 
     def notify(self, topic, msg):
-        data = json.load(msg)
+        data = json.loads(msg)
         if topic == self.switchTopic:
             # ToDo: update process of input msg
+            print(json.dumps(data))
             self.workingStatus = "on"
         elif topic == self.lightTopic:
-            targetStatus = int(data["targetStatus"])
-            self.setLightStatus(targetStatus)
+            brightness = int(data["brightness"])
+            self.setLightStatus(brightness)
 
     def setLightStatus(self, status):
         self.brightness = status
         time.sleep(1)
-        print("Light " + self.deviceId + " brightness:" + self.brightness)
+        print("Light " + self.deviceId + " brightness:" + str(self.brightness))
 
 
 if __name__ == "__main__":

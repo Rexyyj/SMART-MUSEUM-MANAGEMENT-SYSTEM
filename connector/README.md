@@ -45,7 +45,7 @@ This folder contains the implementation of connectors form Smart Museum Manageme
     
     2. Light controller
     <br>Topic:  Not set yet
-	<br>Message:```{"lightControllerId":"light0","timestamp":"" "brightness":0}```
+	<br>Message:```{"lightControllerId":"light0","timestamp":"","brightness":0}```
 	<br>Note:   value of "brightness" could be in range [0,100], means(0% to 100%)
 
 ## Registration Data Format

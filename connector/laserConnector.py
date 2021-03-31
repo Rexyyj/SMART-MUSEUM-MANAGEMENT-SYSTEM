@@ -55,7 +55,8 @@ class LaserConnector():
         print("Published: " + json.dumps(msg))
 
     def notify(self, topic, msg):
-        data = json.load(msg)
+        data = json.loads(msg)
+        print(json.dumps(data))
         # ToDo: update process of input msg
         self.workingStatus = "on"
 

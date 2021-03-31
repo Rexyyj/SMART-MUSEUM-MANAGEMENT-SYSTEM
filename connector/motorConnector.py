@@ -49,9 +49,10 @@ class MotorConnector():
         self.Reg.delete("device", self.conf["deviceId"])
 
     def notify(self, topic, msg):
-        data = json.load(msg)
+        data = json.loads(msg)
         if topic == self.switchTopic:
             # ToDo: update process of input msg
+            print(json.dumps(data))
             self.workingStatus = "on"
         elif topic == self.motorTopic:
             targetStatus = data["targetStatus"]

@@ -1,5 +1,5 @@
 {
-  "deviceId": "motor287513",
+  "deviceId": "light287513",
   "broker": "test.mosquitto.org",
   "port": 1883,
   "lightTopic": "/Polito/iot/SMMS/museum01/floor1/gate1/light",
