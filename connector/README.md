@@ -99,7 +99,6 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 "attribute":{
     "floor":"1",
     "controlZone":"zone1",
-    "currentSataus":"open",
     "currentBrightness":50}
 }
 ```
