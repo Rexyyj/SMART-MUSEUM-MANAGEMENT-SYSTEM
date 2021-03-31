@@ -18,7 +18,7 @@ class LaserConnector():
 
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"laserId": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
+        self.__msg = {"id": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",

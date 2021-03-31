@@ -19,7 +19,7 @@ class CameraConnector():
 
         self.cameraTopic = self.conf["cameraTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"cameraId": self.deviceId, "timestamp": "", "sequenceNum": 0, "temperature": 0}
+        self.__msg = {"id": self.deviceId, "timestamp": "", "sequenceNum": 0, "temperature": 0}
         self.sequenceNum = 0
 
         regMsg = {"registerType": "device",
