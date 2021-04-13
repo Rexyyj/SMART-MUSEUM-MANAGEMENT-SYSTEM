@@ -7,6 +7,8 @@
   "floor":"1",
   "entranceId":"Entrance1",
   "motorControllerId":"motor1",
-  "homeCatAddress": "http://192.168.43.122:8090",
-  "RESTaddr":  "http://192.168.43.122:8091"
+  "homeCatAddress": "http://192.168.43.121:8090",
+  "RESTaddr":  "http://192.168.43.121:8091",
+  "rawImgAddress": "./configs/raw-headshot/",
+  "storeImgAddress": "./records/generatedImages/"
 }

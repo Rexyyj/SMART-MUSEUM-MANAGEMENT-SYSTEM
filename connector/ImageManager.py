@@ -52,7 +52,7 @@ if __name__=="__main__":
         }
     }
     # set this address to host ip address to enable dockers to use REST api
-    cherrypy.server.socket_host='192.168.43.122'
+    cherrypy.server.socket_host='192.168.43.121'
     cherrypy.config.update({'server.socket_port': 8091})
     cherrypy.quickstart(ImageManager("./records/images"), '/',config=conf)
     cherrypy.engine.start()
