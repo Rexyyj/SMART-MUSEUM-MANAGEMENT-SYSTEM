@@ -24,6 +24,16 @@ def on_chat_message(msg):
     elif msg['text'] == 'switchon':
         bot.sendMessage(chat_id, text='turn on all the lights', reply_markup=mark_up)
 
+def get_url():
+    contents = requests.get('https://thingspeak.com/channels/1334459').json()
+    url = contents['url']
+    return url
+
+def send_photo(bot, update):
+    url = get_url()
+    chat_id = update.message.chat_id
+    bot.send_photo(chat_id=chat_id, photo=url)      
+
 TOKEN = '1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ'
 
 bot = telepot.Bot(TOKEN)
