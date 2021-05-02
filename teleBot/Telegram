@@ -32,7 +32,27 @@ def get_url():
 def send_photo(bot, update):
     url = get_url()
     chat_id = update.message.chat_id
-    bot.send_photo(chat_id=chat_id, photo=url)      
+    bot.send_photo(chat_id=chat_id, photo=url)   def sendImageRemoteFile(img_url):
+    url = "https://api.telegram.org/bot<Token>/sendPhoto";
+    remote_image = requests.get(img_url)
+    photo = io.BytesIO(remote_image.content)
+    photo.name = 'img.png'
+    files = {'photo': photo}
+    data = {'chat_id' : "YOUR_CHAT_ID"}
+    r= requests.post(url, files=files, data=data)
+    print(r.status_code, r.reason, r.content)
+
+def overtemperature(bot,update):
+    chat_id=update.message.chat.id
+    with open('image.jpg','rb') as overtemperature_image
+        caption = "<a herf = 'https://>"
+        bot=send_photo(
+            chat_id,
+            photo=overtemperature_image
+            caption=caption
+            parse_mode='HTML'
+        )
+
 
 TOKEN = '1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ'
 
