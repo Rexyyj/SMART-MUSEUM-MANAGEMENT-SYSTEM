@@ -29,10 +29,7 @@ def get_url():
     url = contents['url']
     return url
 
-def send_photo(bot, update):
-    url = get_url()
-    chat_id = update.message.chat_id
-    bot.send_photo(chat_id=chat_id, photo=url)   def sendImageRemoteFile(img_url):
+def sendImageRemoteFile(img_url):
     url = "https://api.telegram.org/bot<Token>/sendPhoto";
     remote_image = requests.get(img_url)
     photo = io.BytesIO(remote_image.content)
