@@ -11,9 +11,13 @@ import json
 import time
 import requests
 
-class Subscriber():
-    def __init__(self,clientID,self.topic,self.broker,self.portport):
+
+ 
+    
+class Customermanager():
+    def __init__(self,clientID,topicID,broker,port):
         self.client=MyMQTT(clientID,self.self.broker,self.port,self)
+        #self.regManager=RegManager()
         self.clientID = clientID
         self.port = 1883
         self.topic='/museumId/entranceId'
@@ -22,6 +26,8 @@ class Subscriber():
                    'zone2':0,
                    'zone3':0,
                    'zone4':0}
+        #getdata=self.regManager.get_data()
+      
         
     
     def start(self):
@@ -33,33 +39,35 @@ class Subscriber():
 
     def notify(self,topic,msg):
         
-        getdata=RegManager.getData(fatherType, childType, params)
+        payload=json.loads(msg)    
         
-         
-        enterzone=getdata["attribute"]["enterZone"]
-        if enterzone="zone1":
-            self.zone['zone1']+=1
-        elif enterzone="zone2":
-            self.zone['zone2']+=1
-        elif enterzone="zone3":
-            self.zone['zone3']+=1
-        elif enterzone="zone4":
-            self.zone['zone4']+=1
+        laserID=payload["laserID"]
+        enter=payload['enter']
+        leaving=payload['leaving']
+        
+        if laserID == "laser0":
+            self.zone['zone1']+=enter
+            self.zone['zone1']-=leaving
+        elif laserID == "laser1":
+            self.zone['zone2']+=enter
+            self.zone['zone2']-=leaving
+            self.zone['zone1']-=enter
+            self.zone['zone1']+=leaving
+        elif laserID == "laser2":
+            self.zone['zone3']+=enter
+            self.zone['zone3']-=leaving
+            self.zone['zone2']-=enter
+            self.zone['zone2']+=leaving
+        elif laserID == "laser3":
+            self.zone['zone4']+=enter
+            self.zone['zone4']-=leaving
+            self.zone['zone3']-=enter
+            self.zone['zone3']+=leaving
         else:
             pass
             
 
-        leavingzone=getdata["attribute"]["leavingZone"]
-        if leavingzone="leavingZone1":
-            self.zone['zone1']-=1
-        elif leavingzone="leavingZone2":
-            self.zone['zone2']-=1
-        elif leavingzone="leavingZone3":
-            self.zone['zone3']-=1
-        elif leavingzone="leavingZone4":
-            self.zone['zone4']-=1
-        else:
-            pass
+
         
         self.client.myPublish("yourtopic",json.dumps(self.zone))#传输topic需要跟thinkspeak  
         
@@ -67,8 +75,11 @@ class Subscriber():
 
 
 if __name__=="__main__":
-    yourtest = Subscriber("CustormerNumber", '/museumId/entranceId', broker, port)
+    getdata=RegManager.getData()
+    topic = getdata["topic"]
+    yourtest = Subscriber("CustormerNumber",topic, broker, port)
     yourtest.start()
+    
     while (True):
         pass
 
