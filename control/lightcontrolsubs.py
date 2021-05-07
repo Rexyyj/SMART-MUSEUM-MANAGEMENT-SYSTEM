@@ -21,7 +21,7 @@ class Customermanager():
         self.clientID = clientID
         self.port = 1883
         self.topic='/museumId/floorNum/gateNum/laser'
-        self.broker='localhost'
+        self.broker='localhost' #其他人运行时请修改
         self.zone={'zone1':0,
                    'zone2':0,
                    'zone3':0,
