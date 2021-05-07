@@ -129,7 +129,7 @@ class Customermanager():
             elif self.light['light4'] == 1:
                 pass        
         
-        self.client.myPublish("yourtopic",json.dumps(self.zone))#传输topic需要跟thinkspeak  
+        self.client.myPublish("yourtopic",json.dumps(self.light))#传输topic需要跟thinkspeak  
         
         
 
