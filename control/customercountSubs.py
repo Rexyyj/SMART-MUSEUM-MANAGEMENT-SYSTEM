@@ -15,12 +15,12 @@ import requests
  
     
 class Customermanager():
-    def __init__(self,clientID,topicID,broker,port):
-        self.client=MyMQTT(clientID,self.self.broker,self.port,self)
+    def __init__(self,clientID,topic,broker,port):
+        self.client=MyMQTT(clientID,self.broker,self.port,self)
         #self.regManager=RegManager()
         self.clientID = clientID
         self.port = 1883
-        self.topic='/museumId/entranceId'
+        self.topic='/museumId/floorNum/gateNum/laser'
         self.broker='localhost'
         self.zone={'zone1':0,
                    'zone2':0,
