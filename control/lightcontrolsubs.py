@@ -2,7 +2,7 @@
 """
 Created on Thu May  6 00:17:44 2021
 
-@author: DELL
+@author: shao
 """
 
 from RegManager import *
@@ -94,7 +94,7 @@ class Customermanager():
         else:
             if self.light['light2'] == 0:
                 self.light['light2'] = 1
-                Message={"lightControllerId":"light1","timestamp":time.time(),"brightness":100}
+                Message={"lightControllerId":"light2","timestamp":time.time(),"brightness":100}
                 self.client.myPublish("yourtopic",json.dumps(Message))
             elif self.light['light2'] == 1:
                 pass
@@ -109,7 +109,7 @@ class Customermanager():
         else:
             if self.light['light3'] == 0:
                 self.light['light3'] = 1
-                Message={"lightControllerId":"light1","timestamp":time.time(),"brightness":100}
+                Message={"lightControllerId":"light3","timestamp":time.time(),"brightness":100}
                 self.client.myPublish("yourtopic",json.dumps(Message))
             elif self.light['light3'] == 1:
                 pass      
@@ -117,7 +117,7 @@ class Customermanager():
         if self.zone['zone4'] == 0:
             if self.light['light4'] == 1:
                 self.light['light4'] = 0
-                Message={"lightControllerId":"light1","timestamp":time.time(),"brightness":0}
+                Message={"lightControllerId":"light4","timestamp":time.time(),"brightness":0}
                 self.client.myPublish("yourtopic",json.dumps(Message))
             elif self.light['light4'] == 0:
                 pass
