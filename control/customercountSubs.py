@@ -16,12 +16,13 @@ import requests
     
 class Customermanager():
     def __init__(self,clientID,topic,broker,port):
-        self.client=MyMQTT(clientID,self.broker,self.port,self)
+       
         #self.regManager=RegManager()
         self.clientID = clientID
         self.port = 1883
-        self.topic='/museumId/floorNum/gateNum/laser'
+        self.topic='/Polito/iot/SMMS/museum01/floor1/gate1/laser'
         self.broker='localhost' #其他人运行时请修改broker
+        self.client=MyMQTT(clientID,self.broker,self.port,self)
         self.zone={'zone1':0,
                    'zone2':0,
                    'zone3':0,
@@ -42,8 +43,8 @@ class Customermanager():
         payload=json.loads(msg)    
         
         laserID=payload["laserID"]
-        enter=payload['enter']
-        leaving=payload['leaving']
+        enter=int(payload['enter'])  # add int due to joson only transmit string,can not do +- calculation
+        leaving=int(payload['leaving'])
         
         if laserID == "laser0":
             self.zone['zone1']+=enter
@@ -66,6 +67,8 @@ class Customermanager():
         else:
             pass
             
+        print("Received: "+json.dumps(payload ,indent=4))
+        print("Processed: "+json.dumps(self.zone ,indent=4))
 
 
         
@@ -75,9 +78,13 @@ class Customermanager():
 
 
 if __name__=="__main__":
-    getdata=RegManager.getData()
-    topic = getdata["topic"]
-    yourtest = Subscriber("CustormerNumber",topic, broker, port)
+    #manager=RegManager('http://localhost:8090/')
+    #getdata=manager.getData('devices','type','floor=2&enterZone=zone1')
+    #topic = getdata["topic"]
+    port = 1883
+    topic='/Polito/iot/SMMS/museum01/floor1/gate1/laser'
+    broker='localhost' #其他人运行时请修改broker
+    yourtest = Customermanager("CustormerNumber",topic, broker, port)
     yourtest.start()
     
     while (True):

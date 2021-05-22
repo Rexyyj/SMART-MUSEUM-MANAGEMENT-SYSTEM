@@ -14,13 +14,13 @@ import requests
 
  
     
-class Customermanager():
+class lightcontrol():
     def __init__(self,clientID,topic,broker,port):
         self.client=MyMQTT(clientID,self.broker,self.port,self)
         #self.regManager=RegManager()
         self.clientID = clientID
         self.port = 1883
-        self.topic='/museumId/floorNum/gateNum/laser'
+        self.topic='/Polito/iot/SMMS/museum01/floor1/gate1/laser'
         self.broker='localhost' #其他人运行时请修改
         self.zone={'zone1':0,
                    'zone2':0,
@@ -45,8 +45,8 @@ class Customermanager():
         payload=json.loads(msg)    
         
         laserID=payload["laserID"]
-        enter=payload['enter']
-        leaving=payload['leaving']
+        enter=int.payload['enter']
+        leaving=int.payload['leaving']
         
         if laserID == "laser0":
             self.zone['zone1']+=enter
@@ -135,9 +135,13 @@ class Customermanager():
 
 
 if __name__=="__main__":
-    getdata=RegManager.getData()
-    topic = getdata["topic"]
-    yourtest = Subscriber("lightControllerId",topic, broker, port)
+    #manager=RegManager('172.0.0.1:8080')
+    #getdata=manager.getData('devices','type','floor=2&enterZone=zone1')
+    #topic = getdata["topic"]
+    port = 1883
+    topic='/Polito/iot/SMMS/museum01/floor1/gate1/laser'
+    broker='localhost' #其他人运行时请修改
+    yourtest = lightcontrol("lightControllerId",topic, broker, port)
     yourtest.start()
     
     while (True):
