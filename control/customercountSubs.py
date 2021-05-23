@@ -19,9 +19,9 @@ class Customermanager():
        
         #self.regManager=RegManager()
         self.clientID = clientID
-        self.port = 1883
-        self.topic='/Polito/iot/SMMS/museum01/floor1/gate1/laser'
-        self.broker='localhost' #其他人运行时请修改broker
+        self.port = port
+        self.topic= topic
+        self.broker= broker
         self.client=MyMQTT(clientID,self.broker,self.port,self)
         self.zone={'zone1':0,
                    'zone2':0,
