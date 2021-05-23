@@ -8,8 +8,6 @@ from common.MyMQTT import *
 from common.RegManager import *
 import json
 import time
-from random import seed
-from random import gauss
 
 
 class LaserConnector():
@@ -26,7 +24,7 @@ class LaserConnector():
 
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"id": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
+        self.__msg = {"laserID": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -36,8 +34,6 @@ class LaserConnector():
                                 "leavingZone": self.conf["leavingZone"]}}
         self.Reg = RegManager(self.conf["homeCatAddress"])
         self.museumSetting = self.Reg.register(regMsg)
-
-        seed(1)
 
         if self.museumSetting == "":
             exit()
@@ -93,31 +89,22 @@ class LaserConnector():
                     self.publish(int(data["enter"]), int(data["leaving"]))
                     time.sleep(10)
 
-    def automatic(self):
-        counter = 0
-        try:
-            while True:
-                counter = counter + 1
-                if counter < 10:
-                    self.publish(int(gauss(10, 5)), int(gauss(3, 2)))
-                elif counter < 20:
-                    self.publish(int(gauss(3, 2)), int(gauss(10, 5)))
-                else:
-                    counter = 0
-                time.sleep(10)
-        except:
-            pass
+    # def modeReader(self):
+    #     print("reader running")
+    #     while True:
+    #         if self.workingStatus != "m":
+    #             self.modeFlag = input()
 
 
 if __name__ == "__main__":
 
-    laserConnector = LaserConnector(input("Enter the location of configuration file: "))
+    laserConnector = LaserConnector('laserConfig.json')
     laserConnector.start()
     time.sleep(1)
 
     while True:
         print("Please choose the working mode:")
-        print("a: automatic m: manual, r: replay, q: quit")
+        print("m: manual, r: replay, q: quit")
         mode = input()
         if mode == "q":
             break;
@@ -125,9 +112,5 @@ if __name__ == "__main__":
             laserConnector.manual()
         elif mode == "r":
             laserConnector.replay()
-        elif mode == "a":
-            laserConnector.automatic()
-        else:
-            print("Entered incorrect mode")
 
     laserConnector.stop()
