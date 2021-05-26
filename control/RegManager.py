@@ -9,7 +9,7 @@ import json
 
 
 class RegManager():
-    def __init__(self,homeCat):
+    def __init__(self, homeCat):
         self.homeCat = homeCat
 
     def register(self, regMsg):
@@ -22,12 +22,14 @@ class RegManager():
             print("Register Success")
         return response["setting"]
 
-    def getData(self, fatherType, childType,params):
-        uri = self.homeCat+"/"+fatherType+"/"+childType
-        response = requests.get(uri,params)
-        data = json.loads(response.text)
+    def getData(self, fatherType, childType, params):
+        uri = self.homeCat + "/" + fatherType + "/" + childType
+        response = requests.get(uri, params)
+        if response == '':
+            data = None
+        else:
+            data = json.loads(response.text)
         return data
 
-
-    def delete(self,type,id):
-        requests.delete(self.homeCat + "/"+type+"/" + id)
+    def delete(self, type, id):
+        requests.delete(self.homeCat + "/" + type + "/" + id)
