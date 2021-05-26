@@ -101,6 +101,10 @@ class HomeCat():
                         break
             elif uri[0] == "service":
                 # ToDo: add DELETE operation
+                for ser in self.services:
+                    if ser["id"]==uri[1]:
+                        self.services.remove(ser)
+                        break
                 pass
             else:
                 pass
@@ -127,6 +131,7 @@ class HomeCat():
             except:
                 return "Device attribute not valid"
         elif data["registerType"] == "service":
+            print(data)
             # check service id
             for ser in self.services:
                 if ser['id'] == data['id']:
@@ -147,7 +152,7 @@ if __name__ == "__main__":
         }
     }
 # set this address to host ip address to enable dockers to use REST api
-cherrypy.server.socket_host='192.168.43.121'
+cherrypy.server.socket_host='192.168.1.100'
 cherrypy.config.update({'server.socket_port': 8090})
 cherrypy.quickstart(HomeCat("./configuration.json"), '/', conf)
 cherrypy.engine.start()

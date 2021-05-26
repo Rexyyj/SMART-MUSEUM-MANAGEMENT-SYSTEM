@@ -7,5 +7,5 @@
   "floor": "1",
   "enterZone": "zone1",
   "leavingZone": "zone2",
-  "homeCatAddress": "http://localhost:8090"
+  "homeCatAddress": "http://192.168.1.100:8090"
 }
