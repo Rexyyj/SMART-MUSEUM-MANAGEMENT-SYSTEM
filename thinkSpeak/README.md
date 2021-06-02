@@ -18,8 +18,8 @@ Contains MQTT API key and REST API key, which are required to access the Thingsp
 ```
 
 ## Functions implemented
-Creat a new channel
-Delete a channel
-Upload data to an existing channel
-Get list of existing channels
+Creat a new channel  
+Delete a channel  
+Upload data to an existing channel  
+Get list of existing channels  
 Get the last data of a channel
