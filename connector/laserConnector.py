@@ -21,12 +21,14 @@ class LaserConnector():
             print("Configuration file not found")
             exit()
         self.deviceId = self.conf["deviceId"]
-        self.client = MyMQTT(self.deviceId, self.conf["broker"], int(self.conf["port"]), self)
+        self.client = MyMQTT(
+            self.deviceId, self.conf["broker"], int(self.conf["port"]), self)
         self.workingStatus = "on"
 
         self.laserTopic = self.conf["laserTopic"]
         self.switchTopic = self.conf["switchTopic"]
-        self.__msg = {"id": self.deviceId, "timestamp": "", "enter": 0, "leaving": 0}
+        self.__msg = {"id": self.deviceId,
+                      "timestamp": "", "enter": 0, "leaving": 0}
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -72,7 +74,8 @@ class LaserConnector():
                 val1 = input()
                 if val1 == "q":
                     break
-                print("Enter the number of people leaving zone:" + self.conf["enterZone"])
+                print("Enter the number of people leaving zone:" +
+                      self.conf["enterZone"])
                 val2 = input()
                 self.publish(val1, val2)
             else:
@@ -80,7 +83,8 @@ class LaserConnector():
 
     def replay(self):
         while True:
-            flag = input("Enter the location of recorded data or enter q to leave: ")
+            flag = input(
+                "Enter the location of recorded data or enter q to leave: ")
             if flag == "q":
                 break
             else:
@@ -111,7 +115,10 @@ class LaserConnector():
 
 if __name__ == "__main__":
 
-    laserConnector = LaserConnector(input("Enter the location of configuration file: "))
+    configFile = input("Enter the location of configuration file: ")
+    if len(configFile) == 0:
+        configFile = "./configs/laserConfig.json"
+    laserConnector = LaserConnector(configFile)
     laserConnector.start()
     time.sleep(1)
 
@@ -120,7 +127,7 @@ if __name__ == "__main__":
         print("a: automatic m: manual, r: replay, q: quit")
         mode = input()
         if mode == "q":
-            break;
+            break
         elif mode == "m":
             laserConnector.manual()
         elif mode == "r":
