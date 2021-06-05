@@ -6,57 +6,96 @@ import requests
 import time
 import cherrypy
 
-def handle(msg):
-    content_type, chat_type, chat_id = telepot.glance(msg)
-    print(content_type, chat_type, chat_id)
+class Telegrambot():
 
-    if msg['text'] == '/start':
-        bot.sendMessage(chat_id, 'Welcome to the museum!')
-    elif msg['text'] == '/info':
-        bot.sendMessage(chat_id, 'the Museum')
+    def __init__(self, confAddr):
+        try:
+            self.conf = json.load(open(confAddr))
+        except:
+            print("Configuration file not found")
+            exit()
+        self.serviceId = self.conf["serviceId"]
+        self.client = MyMQTT(self.serviceId, self.conf["broker"], int(self.conf["port"]), self)
+        self.workingStatus = "on"
+        self.overtempTopic = self.conf["overtempTopic"]
+
+        regMsg = {"registerType": "service",
+                  "id": self.serviceId,
+                  "type": "telegram",
+                  "attribute": {"chatid": self.conf["client"],
+                                "topic": self.overtempTopic,
+                  }
+    def start(self):
+        self.client.start()
+        self.client.mySubscribe(self.overtempTopic)
+
+    def stop(self):
+        self.client.stop()
+        self.Reg.delete("service", self.conf["serviceId"])
+
+    def handle(msg):
+        content_type, chat_type, chat_id = telepot.glance(msg)
+        print(content_type, chat_type, chat_id)
+
+        if msg['text'] == '/start':
+           bot.sendMessage(chat_id, 'Welcome to the museum!', {
+               "reply_markup": {
+                   "keyboard": ["Client"], ["Manager"]}
+               })
+
+        elif msg['text'] == '/info':
+           bot.sendMessage(chat_id, 'What do you want to know about the Museum?', {
+               "reply_markup": {
+                   "keyboard": ["historical data"], ["Current number of people in each area"]}
+               })
 
 
-def on_chat_message(msg):
-    content_type, chat_type, chat_id = telepot.glance(msg)
-    if msg['text'] == '/switchoff':
-        mark_up = ReplyKeyboardMarkup(keyboard=[['zoneA'],['zoneB'],['zoneC'],['zoneD']], one_time_keyboard=True)
-        bot.sendMessage(chat_id, text='What light would you like to turn off?', reply_markup=mark_up)
-    elif msg['text'] == 'switchon':
-        bot.sendMessage(chat_id, text='turn on all the lights', reply_markup=mark_up)
+    def on_chat_message(msg):
+        content_type, chat_type, chat_id = telepot.glance(msg)
+        if msg['text'] == '/switchoff':
+           mark_up = ReplyKeyboardMarkup(keyboard=[['zoneA'],['zoneB'],['zoneC'],['zoneD']], one_time_keyboard=True)
+           bot.sendMessage(chat_id, text='What light would you like to turn off?', reply_markup=mark_up)
+        elif msg['text'] == 'switchon':
+           bot.sendMessage(chat_id, text='turn on all the lights', reply_markup=mark_up)
 
-def get_url():
-    contents = requests.get('https://thingspeak.com/channels/1334459').json()
-    url = contents['url']
-    return url
+    def get_url():
+        contents = requests.get('https://thingspeak.com/channels/1334459').json()
+        url = contents['url']
+        return url
 
-def sendImageRemoteFile(img_url):
-    url = "https://api.telegram.org/bot<Token>/sendPhoto";
-    remote_image = requests.get(img_url)
-    photo = io.BytesIO(remote_image.content)
-    photo.name = 'img.png'
-    files = {'photo': photo}
-    data = {'chat_id' : "YOUR_CHAT_ID"}
-    r= requests.post(url, files=files, data=data)
-    print(r.status_code, r.reason, r.content)
-
-def overtemperature(bot,update):
-    chat_id=update.message.chat.id
-    with open('image.jpg','rb') as overtemperature_image
-        caption = "<a herf = 'https://>"
-        bot=send_photo(
-            chat_id,
-            photo=overtemperature_image
-            caption=caption
-            parse_mode='HTML'
-        )
+    def sendImageRemoteFile(img_url):
+        url = "https://api.telegram.org/bot<Token>/sendPhoto";
+        remote_image = requests.get(img_url)
+        photo = io.BytesIO(remote_image.content)
+        photo.name = 'img.png'
+        files = {'photo': photo}
+        data = {'chat_id': "YOUR_CHAT_ID"}
+        r = requests.post(url, files=files, data=data)
+        print(r.status_code, r.reason, r.content)
 
 
-TOKEN = '1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ'
-
-bot = telepot.Bot(TOKEN)
-MessageLoop(bot, handle).run_as_thread()
-print ('waiting ...')
+     def notify(self, topic,chatid):
+        chat_id = update.message.chat.id
+        if topic == self.overtempTopic:
+           with open('image.jpg', 'rb') as overtemperature_image
+              caption = "<a herf = 'https://>"
+              bot = send_photo(
+                 chat_id,
+                 photo=overtemperature_image
+                 caption = caption
+                 parse_mode = 'HTML'
+              )
+if __name__ == "__main__":
+    config = {
+      "api_token": '1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ',
+      "proxy": "http://127.0.0.1:8118"
+     }
+    bot = telepot.Bot(TOKEN)
+    MessageLoop(bot, handle).run_as_thread()
+    print ('waiting ...')
 
 # Keep the program running.
-while 1:
-    time.sleep(10)
+    while 1:
+        time.sleep(10)
+
+
