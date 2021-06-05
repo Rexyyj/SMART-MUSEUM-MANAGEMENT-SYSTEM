@@ -13,6 +13,7 @@ import requests
 
 
 class Customermanager():
+
     def __init__(self, clientID, topic, broker, port):
         self.homeCatAddr = "http://192.168.1.100:8090"
         self.clientID = clientID
@@ -42,6 +43,7 @@ class Customermanager():
         for zoneDef in self.museumSetting["zones"]:
             self.zone[zoneDef] = 20
 
+
     def start(self):
         self.client.start()
         # subscribe to topic according to available device
@@ -61,6 +63,7 @@ class Customermanager():
         # add int due to joson only transmit string,can not do +- calculation
         enter = int(payload['enter'])
         leaving = int(payload['leaving'])
+
 
         self.zone[self.device2zone[laserID]["enterZone"]] += enter
         if (self.zone[self.device2zone[laserID]["leavingZone"]] - leaving) > 0:
@@ -104,6 +107,7 @@ if __name__ == "__main__":
     topic = '/Polito/iot/SMMS/museum01/floor1/gate1/laser'
     broker = 'localhost'  # 其他人运行时请修改broker
     yourtest = Customermanager("CustormerNumber", topic, broker, port)
+
     yourtest.start()
 
     while (True):

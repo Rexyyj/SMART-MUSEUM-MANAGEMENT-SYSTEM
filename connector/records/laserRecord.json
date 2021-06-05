@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "enter": 2, "leaving": 0},
+    {
+      "enter": 3, "leaving": 2},
+    {
+      "enter": 4, "leaving": 3},
+    {
+      "enter": 5, "leaving": 5},
+    {
+      "enter": 6, "leaving": 0},
+    {
+      "enter": 7, "leaving": 6},
+    {
+      "enter": 8, "leaving": 0},
+    {
+      "enter": 9, "leaving": 15},
+    {
+      "enter": 10, "leaving": 3},
+    {
+      "enter": 1, "leaving": 0}
+  ]
+}
