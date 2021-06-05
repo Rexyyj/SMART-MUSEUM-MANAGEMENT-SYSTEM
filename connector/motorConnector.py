@@ -65,8 +65,10 @@ class MotorConnector():
 
 
 if __name__ == "__main__":
-
-    motorConnector = MotorConnector(input("Enter the location of configuration file: "))
+    configFile = input("Enter the location of configuration file: ")
+    if len(configFile) == 0:
+        configFile = "./configs/motorConfig.json"
+    motorConnector = MotorConnector(configFile)
     motorConnector.start()
     print("Motor connector is running...")
 

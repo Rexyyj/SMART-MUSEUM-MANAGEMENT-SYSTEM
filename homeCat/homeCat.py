@@ -28,7 +28,7 @@ class HomeCat():
         self.registerStatus["errorType"] = errorType
         self.registerStatus["setting"] = setting
 
-    def PUT(self):
+    def POST(self):
         body = cherrypy.request.body.read()
         data = json.loads(body)
         errorCode = self.checkRegister(data)
@@ -119,13 +119,13 @@ class HomeCat():
             try:
                 if data["type"] == "laser" or data["type"] == "motorController":
                     self.setting["floors"].index(data["attribute"]["floor"])
-                    self.setting["zones"].index(data["attribute"]["enterZone"])
-                    self.setting["zones"].index(data["attribute"]["leavingZone"])
+                    list(self.setting["zones"].keys()).index(data["attribute"]["enterZone"])
+                    list(self.setting["zones"].keys()).index(data["attribute"]["leavingZone"])
                 elif data["type"] == "camera":
                     self.setting["entrances"].index(data["attribute"]["entranceId"])
                 elif data["type"] == "lightController":
                     self.setting["floors"].index(data["attribute"]["floor"])
-                    self.setting["zones"].index(data["attribute"]["controlZone"])
+                    list(self.setting["zones"].keys()).index(data["attribute"]["controlZone"])
                 else:
                     pass
             except:
@@ -152,8 +152,8 @@ if __name__ == "__main__":
         }
     }
 # set this address to host ip address to enable dockers to use REST api
-cherrypy.server.socket_host='172.17.0.1'
-cherrypy.config.update({'server.socket_port': 8090})
+cherrypy.server.socket_host=input("ip address of homeCat: ")
+cherrypy.config.update({'server.socket_port': int(input("port of homeCat: "))})
 cherrypy.quickstart(HomeCat("./configuration.json"), '/', conf)
 cherrypy.engine.start()
 cherrypy.engine.block()

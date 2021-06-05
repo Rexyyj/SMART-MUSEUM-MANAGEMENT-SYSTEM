@@ -13,7 +13,7 @@ class RegManager():
         self.homeCat = homeCat
 
     def register(self, regMsg):
-        reg = requests.put(self.homeCat, json.dumps(regMsg))
+        reg = requests.post(self.homeCat, json.dumps(regMsg))
         response = json.loads(reg.text)
         if response["status"] == "fail":
             print("Register Fail!!!")

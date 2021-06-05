@@ -64,8 +64,10 @@ class LightConnector():
 
 
 if __name__ == "__main__":
-
-    lightConnector = LightConnector(input("Enter the location of configuration file: "))
+    configFile = input("Enter the location of configuration file: ")
+    if len(configFile) == 0:
+        configFile = "./configs/lightConfig.json"
+    lightConnector = LightConnector(configFile)
     lightConnector.start()
     print("Light connector is running...")
 
