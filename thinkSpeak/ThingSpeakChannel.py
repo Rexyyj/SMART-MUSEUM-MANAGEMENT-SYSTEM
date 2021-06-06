@@ -10,27 +10,41 @@ string.alphanum = '1234567890avcdefghijklmnopqrstuvwxyzxABCDEFGHIJKLMNOPQRSTUVWX
 class TSchannel():
     def __init__(self,confAddr):
         try:
-            self.AccountConf = json.load(open(confAddr))
+            self.config = json.load(open(confAddr))
         except:
             print("Configuration file not found")
             exit()
 
-        self.URL = 'https://api.thingspeak.com/channels'
-        self.MQTT_key = self.AccountConf["mqttAPIKey"]#"mqttAPIKey": "BGL8BLI28LL8MOKS",
+        self.URL = self.config["URL"]
+        self.MQTT_key = self.config["mqttAPIKey"]#"mqttAPIKey": "BGL8BLI28LL8MOKS",
         self.ChannelInfo = {}
-        self.API_key = {"api_key": self.AccountConf["api_key"]}
+        self.API_key = {"api_key": self.config["api_key"]}
         self.LastData = {}
 
+    def __init__(self,config,channelInfo) :
+        self.ChannelInfo = channelInfo
+        self.config = config
+        self.URL = self.config["URL"]
+        self.MQTT_key = self.config["mqttAPIKey"]
+        self.API_key = {"api_key": self.config["api_key"]}
 
+    def __init__(self,config,channelName) :
+        self.ChannelInfo = {}
+        self.config = config
+        self.URL = self.config["URL"]
+        self.MQTT_key = self.config["mqttAPIKey"]
+        self.API_key = {"api_key": self.config["api_key"]}
+        self.CreateChannel(channelName)
 
-    def CreateChannel(self, ChannelConf):
-        try:
-            self.conf = json.load(open(ChannelConf))
-        except:
-            print("Configuration file not found")
-            exit()
+    def CreateChannel(self,name):
         TSURL = self.URL + '.json'
-        TSobj = self.conf
+        TSobj ={
+            "api_key": self.config["api_key"],
+            "name": name,
+            "public_flag": self.config["public_flag"],
+            "field1": self.config["field1"],
+            "field2": self.config["field2"]
+        }
         Infotext = requests.post(TSURL, data = TSobj).text
         self.ChannelInfo = json.loads(Infotext)
         print(self.ChannelInfo)
