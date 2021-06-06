@@ -2,7 +2,7 @@
   "deviceId": "laser0",
   "broker": "test.mosquitto.org",
   "port": 1883,
-  "laserTopic": "/Polito/iot/SMMS/museum01/floor1/gate1/laser",
+  "laserTopic": "/Polito/iot/SMMS/museum01/floor1/laser",
   "switchTopic": "/Polito/iot/SMMS/museum01/mainSwitch",
   "floor": "1",
   "enterZone": "zone1",

@@ -32,6 +32,7 @@ class MotorConnector():
                   "attribute": {"floor": self.conf["floor"],
                                 "enterZone": self.conf["enterZone"],
                                 "leavingZone": self.conf["leavingZone"],
+                                "entrance":self.conf["entrance"],
                                 "currentStatus": self.doorStatus}
                   }
         self.Reg = RegManager(self.conf["homeCatAddress"])
