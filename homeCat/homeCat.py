@@ -51,7 +51,7 @@ class HomeCat():
                 raise ValueError("Channel create fail...")
         reg = {
             "registerType": "service",
-            "Id": "thingspeak001",
+            "id": "thingspeak001",
             "type": "thingspeak",
             "attribute": {
                 "config": self.thingSpeakConf,
@@ -72,6 +72,7 @@ class HomeCat():
 
     def POST(self):
         body = cherrypy.request.body.read()
+        print(body)
         data = json.loads(body)
         errorCode = self.checkRegister(data)
         if errorCode is not None:
@@ -197,7 +198,6 @@ class HomeCat():
             except:
                 return "Device attribute not valid"
         elif data["registerType"] == "service":
-            print(data)
             # check service id
             for ser in self.services:
                 if ser['id'] == data['id']:
@@ -241,7 +241,7 @@ def cherrypy_thread(homecat):
         {'server.socket_port': int(input("port of homeCat: "))})
     cherrypy_config_status = True
     print("Starting cherrypy engine...")
-    print("Enter 'e' to exit\n")
+    print("Enter 'q' to exit\n")
     time.sleep(1)
     cherrypy.quickstart(homecat, '/', conf)
 
@@ -257,7 +257,7 @@ if __name__ == "__main__":
     while cherrypy_config_status == False:
         pass
     while True:
-        if input() == "e":
+        if input() == "q":
             break
     if input("Save and keep thingSpeak channels? [y/n]") == "y":
         homecat.save_thingSpeak_service()

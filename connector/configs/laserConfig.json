@@ -6,6 +6,6 @@
   "switchTopic": "/Polito/iot/SMMS/museum01/mainSwitch",
   "floor": "1",
   "enterZone": "zone1",
-  "leavingZone": "zone2",
+  "leavingZone": "outdoor",
   "homeCatAddress": "http://192.168.1.100:8090"
 }
