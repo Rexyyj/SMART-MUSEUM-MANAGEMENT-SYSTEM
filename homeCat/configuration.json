@@ -1,10 +1,9 @@
 {
+  "broker":"mqtt.thingspeak.com",
   "museumId": "museum123",
   "museumName": "Palazzo Reale",
   "floors": ["1","2","3"],
   "zones": {"zone1":"50",
-            "zone2":"50",
-            "zone3":"50",
             "outdoor":"99999"},
   "entrances": ["Entrance1","Entrance2"]
 }

@@ -7,16 +7,58 @@
 import cherrypy
 import json
 
+from thinkSpeak.ThingSpeakChannel import TSchannel
+import threading
+import time
+
+cherrypy_config_status = False
+
 
 class HomeCat():
     exposed = True
 
-    def __init__(self, configure):
+    def __init__(self, configure, thingSpeakConf, use_exist_service = False):
         self.setting = json.load(open(configure))
+        self.thingSpeakConf = json.load(open(thingSpeakConf))
         self.devices = []
         self.services = []
-        self.registerStatus = {"status": "success", "errorType": "None", "setting": ""}
+        self.registerStatus = {"status": "success",
+                               "errorType": "None", "setting": ""}
         self.getResult = {"status": "Success", "failType": "None", "data": []}
+        if use_exist_service ==True:
+            exist_service = json.load(open("./thingSpeak_service.json"))
+            channels = set([ch["name"] for ch in exist_service["attribute"]["channels"]])
+            if channels != (set(self.setting["zones"].keys())-{"outdoor"}):
+                raise ValueError(
+                    "Exising thingSpeak service not conform with current museum!")
+            else:
+                self.services.append(exist_service)
+                print(self.services)
+        else:
+            self.channels = []
+            self.create_and_register_channels()
+
+    def create_and_register_channels(self):
+        print("creating channels...")
+        zones = set(self.setting["zones"].keys())-{"outdoor"}
+        channel_infos = []
+        for zone in zones:
+            channel = TSchannel(config=self.thingSpeakConf, channelName=zone)
+            if channel.ChannelInfo != {}:
+                channel_infos.append(channel.ChannelInfo)
+                self.channels.append(channel)
+            else:
+                raise ValueError("Channel create fail...")
+        reg = {
+            "registerType": "service",
+            "Id": "thingspeak001",
+            "type": "thingspeak",
+            "attribute": {
+                "config": self.thingSpeakConf,
+                "channels": channel_infos
+            }
+        }
+        self.services.append(reg)
 
     def set_getResult(self, status, failType, data):
         self.getResult["status"] = status
@@ -63,7 +105,8 @@ class HomeCat():
                         if div["type"] == uri[1]:
                             searchDevice.append(div)
                     if len(searchDevice) == 0:
-                        self.set_getResult("fail", "No such device registered", [])
+                        self.set_getResult(
+                            "fail", "No such device registered", [])
                         return str(self.getResult)
                 else:
                     self.set_getResult("fail", "uri invalid", [])
@@ -88,12 +131,31 @@ class HomeCat():
                 else:
                     self.set_getResult("success", "None", searchDevice)
                     return json.dumps(self.getResult)
+
             elif uri[0] == "service":
-                # ToDo: add GET service operation
-                pass
+                if len(self.services) == 0:
+                    self.set_getResult(
+                        "fail", "No such service registered", [])
+                    return str(self.getResult)
+                searchService = []
+                if uriLen == 1:
+                    searchService = self.services.copy()
+                elif uriLen == 2:
+                    for ser in self.services:
+                        if ser["type"] == uri[1]:
+                            searchService.append(ser)
+                    if len(searchService) == 0:
+                        self.set_getResult(
+                            "fail", "No such service registered", [])
+                        return str(self.getResult)
+                else:
+                    self.set_getResult("fail", "uri invalid", [])
+                    return str(self.getResult)
+                self.set_getResult("success", "None", searchService)
+                return json.dumps(self.getResult)
 
     def DELETE(self, *uri):
-        if len(uri)==2:
+        if len(uri) == 2:
             if uri[0] == "device":
                 for div in self.devices:
                     if div["id"] == uri[1]:
@@ -102,7 +164,7 @@ class HomeCat():
             elif uri[0] == "service":
                 # ToDo: add DELETE operation
                 for ser in self.services:
-                    if ser["id"]==uri[1]:
+                    if ser["id"] == uri[1]:
                         self.services.remove(ser)
                         break
                 pass
@@ -119,13 +181,17 @@ class HomeCat():
             try:
                 if data["type"] == "laser" or data["type"] == "motorController":
                     self.setting["floors"].index(data["attribute"]["floor"])
-                    list(self.setting["zones"].keys()).index(data["attribute"]["enterZone"])
-                    list(self.setting["zones"].keys()).index(data["attribute"]["leavingZone"])
+                    list(self.setting["zones"].keys()).index(
+                        data["attribute"]["enterZone"])
+                    list(self.setting["zones"].keys()).index(
+                        data["attribute"]["leavingZone"])
                 elif data["type"] == "camera":
-                    self.setting["entrances"].index(data["attribute"]["entranceId"])
+                    self.setting["entrances"].index(
+                        data["attribute"]["entranceId"])
                 elif data["type"] == "lightController":
                     self.setting["floors"].index(data["attribute"]["floor"])
-                    list(self.setting["zones"].keys()).index(data["attribute"]["controlZone"])
+                    list(self.setting["zones"].keys()).index(
+                        data["attribute"]["controlZone"])
                 else:
                     pass
             except:
@@ -143,18 +209,58 @@ class HomeCat():
             except:
                 return "Device attribute not valid"
 
+    def destory_thinkSpeak_service(self):
+        try:
+            for channel in self.channels:
+                channel.DeleteChannel()
+                # control the request frequency
+                time.sleep(5)
+        except:
+            print("Unable to delete channels...")
 
-if __name__ == "__main__":
+    def save_thingSpeak_service(self):
+        # Assume currently we only have one thinkspeak service
+        for ser in self.services:
+            if ser["type"] == "thingspeak":
+                with open('thingSpeak_service.json', 'w') as fp:
+                    json.dump(ser, fp)
+                break
+
+
+def cherrypy_thread(homecat):
+    global cherrypy_config_status
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
             'tool.session.on': True
         }
     }
-# set this address to host ip address to enable dockers to use REST api
-cherrypy.server.socket_host=input("ip address of homeCat: ")
-cherrypy.config.update({'server.socket_port': int(input("port of homeCat: "))})
-cherrypy.quickstart(HomeCat("./configuration.json"), '/', conf)
-cherrypy.engine.start()
-cherrypy.engine.block()
+    # set this address to host ip address to enable dockers to use REST api
+    cherrypy.server.socket_host = input("ip address of homeCat: ")
+    cherrypy.config.update(
+        {'server.socket_port': int(input("port of homeCat: "))})
+    cherrypy_config_status = True
+    print("Starting cherrypy engine...")
+    print("Enter 'e' to exit\n")
+    time.sleep(1)
+    cherrypy.quickstart(homecat, '/', conf)
 
+
+if __name__ == "__main__":
+    print("Init homeCat...")
+    homecat = HomeCat("./configuration.json", "./thingSpeakConfig.json",True)
+
+    print("Config homeCat address")
+    t = threading.Thread(target=cherrypy_thread, args=(homecat,))
+    t.start()
+    # cherrypy.engine.block()
+    while cherrypy_config_status == False:
+        pass
+    while True:
+        if input() == "e":
+            break
+    if input("Save and keep thingSpeak channels? [y/n]") == "y":
+        homecat.save_thingSpeak_service()
+    else:
+        homecat.destory_thinkSpeak_service()
+    cherrypy.engine.exit()

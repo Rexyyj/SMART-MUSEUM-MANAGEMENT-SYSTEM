@@ -1,0 +1,23 @@
+{   
+    'id': 1409178, 
+    'name': 'zone1', 
+    'description': None, 
+    'latitude': '0.0', 
+    'longitude': '0.0', 
+    'created_at': '2021-06-06T09: 43: 47Z', 
+    'elevation': None, 
+    'last_entry_id': None, 
+    'public_flag': True, 
+    'url': None, 
+    'ranking': 30, 
+    'metadata': None, 
+    'license_id': 0, 
+    'github_url': None, 
+    'tags': [], 
+    'api_keys': [
+        {'api_key': 'LGJ4LA2836KUN28M', 'write_flag': True
+        },
+        {'api_key': 'DIIJTN3QVV5YK6KJ', 'write_flag': False
+        }
+    ]
+}
