@@ -28,6 +28,12 @@ class Mapper():
             cam2ent[cam["id"]] = cam["attribute"]["entranceId"]
         return cam2ent  # Format: {"camera01":"zone1"}
 
+    def getMap_motor2entrance(self,raw_device) ->dict:
+        motor2entrance ={}
+        for dev in raw_device:
+            motor2entrance[dev["id"]]=dev["attribute"]["entrance"]
+        return motor2entrance # Format: {"motor0":"Entrance0"}
+
     def getMap_zone2device_LM(self, raw_device, raw_zones) -> dict:
         zone2dev = {}
         for zone in (set(raw_zones.keys())-{"outdoor"}):
@@ -57,3 +63,13 @@ class Mapper():
                     cam.add(device["id"])
             ent2cam[ent] = cam
         return ent2cam  # Format: {"entrance1":["camera001","camera002"]}
+
+    def getMap_entrance2motor(self, raw_device, raw_entrance):
+        ent2mot={}
+        for ent in raw_entrance:
+            mot =set()
+            for dev in raw_device:
+                if dev["entranceId"] == ent:
+                    mot.add(dev["id"])
+            ent2mot[ent]=mot
+        return ent2mot # Format: {"entrance1":["motor001","motor002"]}
