@@ -70,8 +70,11 @@ class TSchannel():
         else:
             raise ValueError("Upload target not exist")
         try:
+            print(topic)
+            print("channelid: "+str(ChannelID))
+            print("writeAPI: "+writeAPIKey)
             publish.single(topic, payload, hostname=MQTT_broker, transport='websockets', port=80, auth={'username': 'MQTT_publisher', 'password': self.MQTT_key})
-            print("Trying to upload data to ", target, " value = ", value, " to channel: ", ChannelID, " clientID= ", self.clientID)
+            #print("Trying to upload data to ", target, " value = ", str(value), " to channel: ", str(ChannelID), " clientID= ", str(self.clientID))
         except:
             print("There was an error while publishing the data.")
 

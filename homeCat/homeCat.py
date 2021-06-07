@@ -254,7 +254,11 @@ def cherrypy_thread(homecat):
 
 if __name__ == "__main__":
     print("Init homeCat...")
-    homecat = HomeCat("./configuration.json", "./thingSpeakConfig.json",True)
+    if input("Use exist thingSpeak channel? [y/n]") == "n":
+        mode =False
+    else:
+        mode = True
+    homecat = HomeCat("./configuration.json", "./thingSpeakConfig.json",mode)
 
     print("Config homeCat address")
     t = threading.Thread(target=cherrypy_thread, args=(homecat,))
