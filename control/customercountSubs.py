@@ -8,10 +8,11 @@ Created on Tue Mar  2 16:45:30 2021
 from common.RegManager import *
 from common.MyMQTT import *
 from common.Mapper import Mapper
+from thinkSpeak.ThingSpeakChannel import  TSchannel
 import json
 import time
 import requests
-
+import threading
 
 class Customermanager():
 
@@ -21,6 +22,7 @@ class Customermanager():
         except:
             print("Configuration file not found")
             exit()
+        self.workingStatus = True
         self.homeCatAddr = self.conf["homeCatAddress"]
         self.clientID = self.conf["serviceId"]
         self.port = self.conf["port"]
@@ -47,6 +49,13 @@ class Customermanager():
         self.zone = {}
         for zoneDef in self.museumSetting["zones"]:
             self.zone[zoneDef] = 20
+        time.sleep(1)
+        # create thingspeak instances
+        thingspeak = self.Reg.getData("service","thingspeak",None)["data"][0]
+        channels = thingspeak["attribute"]["channels"]
+        self.tschannels ={}
+        for channel in channels:
+            self.tschannels[channel["name"]] = TSchannel(config=thingspeak["attribute"]["config"],channelInfo=channel)
 
 
     def start(self):
@@ -59,6 +68,7 @@ class Customermanager():
             self.client.mySubscribe(topic)
 
     def stop(self):
+        self.workingStatus=False
         self.client.stop()
         # unregister device
         self.Reg.delete("service", self.clientID)
@@ -84,6 +94,14 @@ class Customermanager():
         self.client.myPublish(self.topic, json.dumps(self.zone))
         # 传输topic需要跟thinkspeak
 
+    def thingSpeakUploader(self):
+        while self.workingStatus:
+            for key in list(self.tschannels.keys()):
+                self.tschannels[key].UploadData("crowd",self.zone[key])
+                time.sleep(10)
+
+
+
 
 if __name__ == "__main__":
     configFile = input("Enter the location of configuration file: ")
@@ -91,8 +109,9 @@ if __name__ == "__main__":
         configFile = "./configs/crowdControl.json"
 
     customermanager = Customermanager(configFile)
-
+    t = threading.Thread(target=customermanager.thingSpeakUploader)
     customermanager.start()
+    t.start()
     print("Crowd control service running...")
     print("Enter 'q' to exit")
     while (True):

@@ -236,9 +236,15 @@ def cherrypy_thread(homecat):
         }
     }
     # set this address to host ip address to enable dockers to use REST api
-    cherrypy.server.socket_host = input("ip address of homeCat: ")
+    host = input("ip address of homeCat: ")
+    if len(host) == 0:
+        host = "192.168.1.100"
+    port = input("port of homeCat: ")
+    if len(port) == 0:
+        port = "8090"
+    cherrypy.server.socket_host = host
     cherrypy.config.update(
-        {'server.socket_port': int(input("port of homeCat: "))})
+        {'server.socket_port':int(port) })
     cherrypy_config_status = True
     print("Starting cherrypy engine...")
     print("Enter 'q' to exit\n")

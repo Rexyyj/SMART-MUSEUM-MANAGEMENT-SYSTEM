@@ -8,33 +8,39 @@ import time
 string.alphanum = '1234567890avcdefghijklmnopqrstuvwxyzxABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
 class TSchannel():
-    def __init__(self,confAddr):
-        try:
-            self.config = json.load(open(confAddr))
-        except:
-            print("Configuration file not found")
-            exit()
+    def __init__(self,confAddr=None,config=None,channelName=None,channelInfo=None):
+        if confAddr!=None:
+            try:
+                self.config = json.load(open(confAddr))
+            except:
+                print("Configuration file not found")
+                exit()
 
-        self.URL = self.config["URL"]
-        self.MQTT_key = self.config["mqttAPIKey"]#"mqttAPIKey": "BGL8BLI28LL8MOKS",
-        self.ChannelInfo = {}
-        self.API_key = {"api_key": self.config["api_key"]}
-        self.LastData = {}
+            self.URL = self.config["URL"]
+            self.MQTT_key = self.config["mqttAPIKey"]#"mqttAPIKey": "BGL8BLI28LL8MOKS",
+            self.ChannelInfo = {}
+            self.API_key = {"api_key": self.config["api_key"]}
+            self.LastData = {}
+            self.clientID = ''
+            # Create a random clientID.
+            for x in range(1, 16):
+                self.clientID += random.choice(string.alphanum)
+        elif config!=None and channelName!=None:
+            self.ChannelInfo = {}
+            self.config = config
+            self.URL = self.config["URL"]
+            self.MQTT_key = self.config["mqttAPIKey"]
+            self.API_key = {"api_key": self.config["api_key"]}
+            self.CreateChannel(channelName)
+        elif config!=None and channelInfo!=None:
+            self.ChannelInfo = channelInfo
+            self.config = config
+            self.URL = self.config["URL"]
+            self.MQTT_key = self.config["mqttAPIKey"]
+            self.API_key = {"api_key": self.config["api_key"]}
+        else:
+            raise ValueError
 
-    def __init__(self,config,channelInfo) :
-        self.ChannelInfo = channelInfo
-        self.config = config
-        self.URL = self.config["URL"]
-        self.MQTT_key = self.config["mqttAPIKey"]
-        self.API_key = {"api_key": self.config["api_key"]}
-
-    def __init__(self,config,channelName) :
-        self.ChannelInfo = {}
-        self.config = config
-        self.URL = self.config["URL"]
-        self.MQTT_key = self.config["mqttAPIKey"]
-        self.API_key = {"api_key": self.config["api_key"]}
-        self.CreateChannel(channelName)
 
     def CreateChannel(self,name):
         TSURL = self.URL + '.json'
@@ -50,21 +56,22 @@ class TSchannel():
         print(self.ChannelInfo)
 
 
-
-    def UploadData(self,CrowdNumber,LightNumber):
+    # target could be crowd / light
+    def UploadData(self,target,value):
         MQTT_broker = 'mqtt.thingspeak.com'
         writeAPIKey = self.ChannelInfo['api_keys'][0]['api_key']
-        #while(1):
-        clientID = ''
-        # Create a random clientID.
-        for x in range(1, 16):
-            clientID += random.choice(string.alphanum)
+
         ChannelID = self.ChannelInfo['id']
         topic = "channels/" + str(ChannelID) + "/publish/" + str(writeAPIKey)
-        payload = "field1=" + str(CrowdNumber) + "&field2=" + str(LightNumber)
+        if target == "crowd":
+            payload = "field1=" + str(value) 
+        elif target=="light":
+            payload = "field2=" + str(value)
+        else:
+            raise ValueError("Upload target not exist")
         try:
             publish.single(topic, payload, hostname=MQTT_broker, transport='websockets', port=80, auth={'username': 'MQTT_publisher', 'password': self.MQTT_key})
-            print("Trying to upload data Crowd = ", CrowdNumber, " Light = ", LightNumber, " to channel: ", ChannelID, " clientID= ", clientID)
+            print("Trying to upload data to ", target, " value = ", value, " to channel: ", ChannelID, " clientID= ", self.clientID)
         except:
             print("There was an error while publishing the data.")
 
