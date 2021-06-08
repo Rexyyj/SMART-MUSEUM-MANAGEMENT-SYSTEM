@@ -26,13 +26,13 @@ class Customermanager():
         self.homeCatAddr = self.conf["homeCatAddress"]
         self.clientID = self.conf["serviceId"]
         self.port = self.conf["port"]
-        self.topic = self.conf["topic"]
+        self.topic = self.conf["topicPub"]
         self.broker = self.conf["broker"]
         self.client = MyMQTT(self.clientID, self.broker, self.port, self)
         # Register service to homeCat
         regMsg = {"registerType": "service",
                   "id": self.clientID,
-                  "type": "laser",
+                  "type": "crowdcontrol",
                   "attribute": None}
         self.Reg = RegManager(self.homeCatAddr)
         self.museumSetting = self.Reg.register(regMsg)
@@ -47,7 +47,7 @@ class Customermanager():
         self.device2zone = self.mapper.getMap_device2zone_LM(self.devices)
         # define zone counter from museum setting
         self.zone = {}
-        for zoneDef in self.museumSetting["zones"]:
+        for zoneDef in set(self.museumSetting["zones"].keys()):
             self.zone[zoneDef] = 20
         time.sleep(1)
         # create thingspeak instances

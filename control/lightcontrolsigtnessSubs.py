@@ -5,150 +5,114 @@ Created on Thu May  6 00:17:44 2021
 @author: shao
 """
 
-from RegManager import *
-from MyMQTT import *
+from common.RegManager import *
+from common.MyMQTT import *
+from common.Mapper import Mapper
+from thinkSpeak.ThingSpeakChannel import TSchannel
 import json
 import time
 import requests
-
-
+import datetime
+import threading
  
     
-class lightcontrol():
-    def __init__(self,clientID,topic,broker,port):
+class Lightcontrol():
+    def __init__(self,confAddr):
+        try:
+            self.conf = json.load(open(confAddr))
+        except:
+            print("Configuration file not found")
+            exit()
+        self.workingStatus = True
+        self.homeCatAddr = self.conf["homeCatAddress"]
+        self.clientID = self.conf["serviceId"]
+        self.port = self.conf["port"]
+        self.topic = self.conf["topicPub"]
+        self.broker = self.conf["broker"]
+        self.client = MyMQTT(self.clientID, self.broker, self.port, self)
+        self.mapper = Mapper()
+        # Register service to homeCat
+        regMsg = {"registerType": "service",
+                  "id": self.clientID,
+                  "type": "lightcontrol",
+                  "attribute": None}
+        self.Reg = RegManager(self.homeCatAddr)
+        self.museumSetting = self.Reg.register(regMsg)
+        # check the register is correct or not
+        if self.museumSetting == "":
+            exit()
+        # get all available light device from homeCat
+        self.devices = self.Reg.getData("devices", "light", None)["data"]
         
-        #self.regManager=RegManager()
-        self.clientID = clientID
-        self.port = port
-        self.topic= topic
-        self.broker= broker
-        self.client=MyMQTT(clientID,self.broker,self.port,self)
-        self.zone={'zone1':0,
-                   'zone2':0,
-                   'zone3':0,
-                   'zone4':0}
-        #getdata=self.regManager.get_data()
-        self.light={'light1':0,
-                    'light2':0,
-                    'light3':0,
-                    'light4':0}
-        
-    
+        self.zone2light = self.mapper.getMap_zone2Light(self.devices)
+        self.zones = {}
+        for zoneDef in set(self.museumSetting["zones"].keys()):
+            self.zones[zoneDef] = 0
+
+        thingspeak = self.Reg.getData("service","thingspeak",None)["data"][0]
+        channels = thingspeak["attribute"]["channels"]
+        self.tschannels ={}
+        for channel in channels:
+            self.tschannels[channel["name"]] = TSchannel(config=thingspeak["attribute"]["config"],channelInfo=channel)
+
     def start(self):
         self.client.start()
-        self.client.mySubscribe(self.topic)
+        self.client.mySubscribe(self.conf["topicSub"])
 
     def stop(self):
         self.client.stop()
+   
+    def publish(self, lightId, brightness):
+        msg = {"lightControllerId":lightId,"timestamp":str(datetime.datetime.now()), "brightness":str(brightness)}
+        self.client.myPublish(self.topic, msg)
+        print("Published: " + json.dumps(msg))
+
+
+    def judege_light_brightness(self,time,number,origin_brightness):
+        brightness =100
+
+        if time > 10 and time< 15:
+            brightness = 70
+
+        if number == 0 and origin_brightness >=10 :
+            brightness = origin_brightness - 10
+        
+        return brightness
+
+
+
 
     def notify(self,topic,msg):
         
         payload=json.loads(msg)    
-        
-        laserID=payload["laserID"]
-        enter=int(payload['enter'])
-        leaving=int(payload['leaving'])
-        
-        if laserID == "laser0":
-            self.zone['zone1']+=enter
-            self.zone['zone1']-=leaving
-        elif laserID == "laser1":
-            self.zone['zone2']+=enter
-            self.zone['zone2']-=leaving
-            self.zone['zone1']-=enter
-            self.zone['zone1']+=leaving
-        elif laserID == "laser2":
-            self.zone['zone3']+=enter
-            self.zone['zone3']-=leaving
-            self.zone['zone2']-=enter
-            self.zone['zone2']+=leaving
-        elif laserID == "laser3":
-            self.zone['zone4']+=enter
-            self.zone['zone4']-=leaving
-            self.zone['zone3']-=enter
-            self.zone['zone3']+=leaving
-        else:
-            pass
+        timeH = int(time.strftime('%H'))
+        for zone in set(payload.keys()):
+            self.zones[zone] = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
+            lightId = self.zone2light[zone]
+            self.publish(lightId,self.zones[zone])
+            time.sleep(0.5)
 
-        if self.zone['zone1'] == 0:
-            if self.light['light1'] == 1:
-                self.light['light1'] = 0
-                Message={"lightControllerId":["light1"],"timestamp":time.time(),"brightness":0}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-
-            elif self.light['light1'] == 0:
-                 pass
-        else:
-            if self.light['light1'] == 0:
-                self.light['light1'] = 1
-                Message={"lightControllerId":["light1"],"timestamp":time.time(),"brightness":100}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light1'] == 1:
-                 pass
-        if self.zone['zone2'] == 0:
-            if self.light['light2'] == 1:
-                self.light['light2'] = 0
-                Message={"lightControllerId":["light2"],"timestamp":time.time(),"brightness":0}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light2'] == 0:
-                 pass
-        else:
-            if self.light['light2'] == 0:
-                self.light['light2'] = 1
-                Message={"lightControllerId":["light2"],"timestamp":time.time(),"brightness":100}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light2'] == 1:
-                 pass
-        if self.zone['zone3'] == 0:
-            if self.light['light3'] == 1:
-                self.light['light3'] = 0
-                Message={"lightControllerId":["light3"],"timestamp":time.time(),"brightness":0}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light3'] == 0:
-                 pass  
-        else:
-            if self.light['light3'] == 0:
-                self.light['light3'] = 1
-                Message={"lightControllerId":["light3"],"timestamp":time.time(),"brightness":100}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light3'] == 1:
-                 pass
-        if self.zone['zone4'] == 0:
-            if self.light['light4'] == 1:
-                self.light['light4'] = 0
-                Message={"lightControllerId":["light4"],"timestamp":time.time(),"brightness":0}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light4'] == 0:
-                 pass
-        else:
-            if self.light['light4'] == 0:
-                self.light['light4'] = 1
-                Message={"lightControllerId":["light4"],"timestamp":time.time(),"brightness":100}
-                self.client.myPublish("/Polito/iot/SMMS/museum01/mainSwitch",json.dumps(Message))
-                
-            elif self.light['light4'] == 1:
-                 pass      
-        
-        self.client.myPublish("yourtopic",json.dumps(self.light))#传输topic需要跟thinkspeak  
-        print(self.light)
-        
+    
+    def thingSpeakUploader(self):
+        while self.workingStatus:
+            for key in list(self.tschannels.keys()):
+                self.tschannels[key].UploadData("light",self.zone[key])
+                time.sleep(10)
 
 
 if __name__=="__main__":
-    #manager=RegManager('172.0.0.1:8080')
-    #getdata=manager.getData('devices','type','floor=2&enterZone=zone1')
-    #topic = getdata["topic"]
-    port = 1883
-    topic='/Polito/iot/SMMS/museum01/floor1/gate1/laser'
-    broker='localhost' #其他人运行时请修改
-    yourtest = lightcontrol("lightControllerId",topic,broker,port)
-    yourtest.start()
+    configFile = input("Enter the location of configuration file: ")
+    if len(configFile) == 0:
+        configFile = "./configs/lightControl.json"
+    lightcontrol = Lightcontrol(configFile)
     
+    t = threading.Thread(target=lightcontrol.thingSpeakUploader)
+    lightcontrol.start()
+    t.start()
+    print("Crowd control service running...")
+    print("Enter 'q' to exit")
     while (True):
-        pass
+        if input() == 'q':
+            break
+    
+    lightcontrol.stop()

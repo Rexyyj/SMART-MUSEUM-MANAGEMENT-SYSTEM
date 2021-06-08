@@ -10,7 +10,7 @@ import json
 import time
 from random import seed
 from random import gauss
-
+import datetime
 
 class LaserConnector():
 
@@ -54,7 +54,7 @@ class LaserConnector():
 
     def publish(self, inNum, outNum):
         msg = self.__msg
-        msg["timestamp"] = str(time.time())
+        msg["timestamp"] = str(datetime.datetime.now())
         msg["enter"] = inNum
         msg["leaving"] = outNum
         self.client.myPublish(self.laserTopic, msg)
