@@ -13,7 +13,7 @@ import json
 import time
 import requests
 import threading
-
+import datetime
 class Customermanager():
 
     def __init__(self,confAddr):
@@ -29,6 +29,8 @@ class Customermanager():
         self.topic = self.conf["topicPub"]
         self.broker = self.conf["broker"]
         self.client = MyMQTT(self.clientID, self.broker, self.port, self)
+        self.__msg = {"id": self.clientID,
+                      "timestamp": "","data":""}
         # Register service to homeCat
         regMsg = {"registerType": "service",
                   "id": self.clientID,
@@ -73,6 +75,13 @@ class Customermanager():
         # unregister device
         self.Reg.delete("service", self.clientID)
 
+    def publish(self, data):
+        msg = self.__msg
+        msg["timestamp"] = str(datetime.datetime.now())
+        msg["data"] = data
+        self.client.myPublish(self.topic, msg)
+        print("Published: " + json.dumps(msg))
+
     def notify(self, topic, msg):
 
         payload = json.loads(msg)
@@ -88,10 +97,11 @@ class Customermanager():
         else:
             self.zone[str(self.device2zone[laserID]["leavingZone"])] = 0
 
-        print("Received: " + json.dumps(payload, indent=4))
-        print("Processed: " + json.dumps(self.zone, indent=4))
-
-        self.client.myPublish(self.topic, json.dumps(self.zone))
+        self.publish(self.zone)
+        # print("Received: " + json.dumps(payload, indent=4))
+        # print("Processed: " + json.dumps(self.zone, indent=4))
+        # temp =self.zone.copy()
+        # self.client.myPublish(self.topic, json.dumps(temp))
         # 传输topic需要跟thinkspeak
 
     def thingSpeakUploader(self):
