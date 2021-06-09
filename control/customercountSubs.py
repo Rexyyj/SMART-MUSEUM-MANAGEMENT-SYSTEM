@@ -91,11 +91,18 @@ class Customermanager():
         enter = int(payload['enter'])
         leaving = int(payload['leaving'])
 
-        self.zone[str(self.device2zone[laserID]["enterZone"])] += enter
-        if (self.zone[str(self.device2zone[laserID]["leavingZone"])] - leaving) > 0:
-            self.zone[str(self.device2zone[laserID]["leavingZone"])] -= leaving
+        if self.device2zone[laserID]["enterZone"] == "outdoor":
+            pass
         else:
-            self.zone[str(self.device2zone[laserID]["leavingZone"])] = 0
+            self.zone[self.device2zone[laserID]["enterZone"]] += enter
+        
+        if self.zone[self.device2zone[laserID]["leavingZone"]] == "outdoor":
+            pass
+        else:
+            if (self.zone[self.device2zone[laserID]["leavingZone"]] - leaving) > 0:
+                self.zone[self.device2zone[laserID]["leavingZone"]] -= leaving
+            else:
+                self.zone[self.device2zone[laserID]["leavingZone"]] = 0
 
         self.publish(self.zone)
         # print("Received: " + json.dumps(payload, indent=4))

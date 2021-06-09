@@ -41,7 +41,7 @@ class Mapper():
             for device in raw_device:
                 if device["attribute"]["enterZone"] == zone or device["attribute"]["leavingZone"] == zone:
                     devs.add(device["id"])
-            zone2dev[zone] = devs
+            zone2dev[zone] = list(devs)
         return zone2dev  # Format: {"zone1":["laser001","laser002"]}
 
     def getMap_zone2Light(self, raw_device, raw_zones)-> dict:
@@ -51,7 +51,7 @@ class Mapper():
             for device in raw_device:
                 if device["attribute"]["controlZone"] == zone:
                     lig.add(device["id"])
-            zone2light[zone] = lig
+            zone2light[zone] = list(lig)
         return zone2light  # Format: {"zone1":["light001","light002"]}
 
     def getMap_entrance2camera(self, raw_device, raw_entrance)-> dict:
@@ -61,7 +61,7 @@ class Mapper():
             for device in raw_device:
                 if device["entranceId"] == ent:
                     cam.add(device["id"])
-            ent2cam[ent] = cam
+            ent2cam[ent] = list(cam)
         return ent2cam  # Format: {"entrance1":["camera001","camera002"]}
 
     def getMap_entrance2motor(self, raw_device, raw_entrance):
@@ -71,5 +71,5 @@ class Mapper():
             for dev in raw_device:
                 if dev["entranceId"] == ent:
                     mot.add(dev["id"])
-            ent2mot[ent]=mot
+            ent2mot[ent]=list(mot)
         return ent2mot # Format: {"entrance1":["motor001","motor002"]}
