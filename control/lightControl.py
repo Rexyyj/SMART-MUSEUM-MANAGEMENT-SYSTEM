@@ -36,12 +36,12 @@ class Lightcontrol():
                   "id": self.clientID,
                   "type": "lightcontrol",
                   "attribute": None}
-        # self.Reg = RegManager(self.homeCatAddr)
-        # self.museumSetting = self.Reg.register(regMsg)
-        # # check the register is correct or not
-        # if self.museumSetting == "":
-        #     exit()
-        # get all available light device from homeCat
+        self.Reg = RegManager(self.homeCatAddr)
+        self.museumSetting = self.Reg.register(regMsg)
+        # check the register is correct or not
+        if self.museumSetting == "":
+            exit()
+        #get all available light device from homeCat
         self.devices = self.Reg.getData("devices", "light", None)["data"]
         
         self.zone2light = self.mapper.getMap_zone2Light(self.devices,self.museumSetting["zones"])
