@@ -30,6 +30,8 @@ class Lightcontrol():
         self.topic = self.conf["topicPub"]
         self.broker = self.conf["broker"]
         self.client = MyMQTT(self.clientID, self.broker, self.port, self)
+        self.__msg = {"id": self.clientID,
+                      "timestamp": "","data":""}
         self.mapper = Mapper()
         # Register service to homeCat
         regMsg = {"registerType": "service",
@@ -46,7 +48,7 @@ class Lightcontrol():
         
         self.zone2light = self.mapper.getMap_zone2Light(self.devices,self.museumSetting["zones"])
         self.zones = {}
-        for zoneDef in set(self.museumSetting["zones"].keys()):
+        for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
             self.zones[zoneDef] = 0
 
         thingspeak = self.Reg.getData("service","thingspeak",None)["data"][0]
@@ -62,6 +64,8 @@ class Lightcontrol():
 
     def stop(self):
         self.client.stop()
+        self.workingStatus=False
+        self.Reg.delete("service", self.clientID)
    
     def publish(self, lightId, brightness):
         msg = {"lightControllerId":lightId,"timestamp":str(datetime.datetime.now()), "brightness":str(brightness)}
@@ -85,20 +89,21 @@ class Lightcontrol():
 
     def notify(self,topic,msg):
         
-        payload=json.loads(msg)   
+        payload=json.loads(msg)["data"]
         print(payload) 
         timeH = int(time.strftime('%H'))
         for zone in set(payload.keys()):
             self.zones[zone] = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
             lightId = self.zone2light[zone]
-            self.publish(lightId,self.zones[zone])
+            for id in lightId:
+                self.publish(id,self.zones[zone])
             time.sleep(0.5)
 
     
     def thingSpeakUploader(self):
         while self.workingStatus:
             for key in list(self.tschannels.keys()):
-                self.tschannels[key].UploadData("light",self.zone[key])
+                self.tschannels[key].UploadData("light",self.zones[key])
                 time.sleep(10)
 
 
@@ -108,9 +113,9 @@ if __name__=="__main__":
         configFile = "./configs/lightControl.json"
     lightcontrol = Lightcontrol(configFile)
     
-    # t = threading.Thread(target=lightcontrol.thingSpeakUploader)
+    t = threading.Thread(target=lightcontrol.thingSpeakUploader)
     lightcontrol.start()
-    # t.start()
+    t.start()
     print("Crowd control service running...")
     print("Enter 'q' to exit")
     while (True):
