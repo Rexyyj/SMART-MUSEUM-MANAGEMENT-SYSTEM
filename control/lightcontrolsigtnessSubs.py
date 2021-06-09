@@ -36,11 +36,11 @@ class Lightcontrol():
                   "id": self.clientID,
                   "type": "lightcontrol",
                   "attribute": None}
-        self.Reg = RegManager(self.homeCatAddr)
-        self.museumSetting = self.Reg.register(regMsg)
-        # check the register is correct or not
-        if self.museumSetting == "":
-            exit()
+        # self.Reg = RegManager(self.homeCatAddr)
+        # self.museumSetting = self.Reg.register(regMsg)
+        # # check the register is correct or not
+        # if self.museumSetting == "":
+        #     exit()
         # get all available light device from homeCat
         self.devices = self.Reg.getData("devices", "light", None)["data"]
         
@@ -54,6 +54,7 @@ class Lightcontrol():
         self.tschannels ={}
         for channel in channels:
             self.tschannels[channel["name"]] = TSchannel(config=thingspeak["attribute"]["config"],channelInfo=channel)
+        print()
 
     def start(self):
         self.client.start()
@@ -84,7 +85,8 @@ class Lightcontrol():
 
     def notify(self,topic,msg):
         
-        payload=json.loads(msg)    
+        payload=json.loads(msg)   
+        print(payload) 
         timeH = int(time.strftime('%H'))
         for zone in set(payload.keys()):
             self.zones[zone] = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
@@ -106,9 +108,9 @@ if __name__=="__main__":
         configFile = "./configs/lightControl.json"
     lightcontrol = Lightcontrol(configFile)
     
-    t = threading.Thread(target=lightcontrol.thingSpeakUploader)
+    # t = threading.Thread(target=lightcontrol.thingSpeakUploader)
     lightcontrol.start()
-    t.start()
+    # t.start()
     print("Crowd control service running...")
     print("Enter 'q' to exit")
     while (True):
