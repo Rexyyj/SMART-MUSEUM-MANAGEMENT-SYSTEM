@@ -1,0 +1,8 @@
+{
+  "serviceId": "camera0",
+  "broker": "localhost",
+  "port": 1883,
+  "homeCatAddress": "http://192.168.1.100:8090",
+  "topic": "/Polito/iot/SMMS/museum01/floor1/gate1/camera"
+
+}
