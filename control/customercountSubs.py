@@ -77,7 +77,7 @@ class Customermanager():
 
         payload = json.loads(msg)
 
-        laserID = payload["laserID"]
+        laserID = payload["id"]
         # add int due to joson only transmit string,can not do +- calculation
         enter = int(payload['enter'])
         leaving = int(payload['leaving'])
