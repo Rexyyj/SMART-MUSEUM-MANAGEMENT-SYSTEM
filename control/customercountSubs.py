@@ -49,7 +49,7 @@ class Customermanager():
         self.device2zone = self.mapper.getMap_device2zone_LM(self.devices)
         # define zone counter from museum setting
         self.zone = {}
-        for zoneDef in set(self.museumSetting["zones"].keys()):
+        for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
             self.zone[zoneDef] = 20
         time.sleep(1)
         # create thingspeak instances
