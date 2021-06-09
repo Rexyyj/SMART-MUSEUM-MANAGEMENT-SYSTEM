@@ -96,7 +96,7 @@ class Customermanager():
         else:
             self.zone[self.device2zone[laserID]["enterZone"]] += enter
         
-        if self.zone[self.device2zone[laserID]["leavingZone"]] == "outdoor":
+        if self.device2zone[laserID]["leavingZone"] == "outdoor":
             pass
         else:
             if (self.zone[self.device2zone[laserID]["leavingZone"]] - leaving) > 0:
