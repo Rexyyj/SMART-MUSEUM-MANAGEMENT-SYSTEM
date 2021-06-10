@@ -91,7 +91,7 @@ class Lightcontrol():
         
         payload=json.loads(msg)["data"]
         print(payload) 
-        timeH = int(time.strftime('%H'))
+        timeH = int(datetime.datetime.now().hour)
         for zone in set(payload.keys()):
             self.zones[zone] = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
             lightId = self.zone2light[zone]
