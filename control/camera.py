@@ -72,10 +72,10 @@ class Camera():
     def notify(self, topic, msg):
 
         
-        temperature_conditon=json.loads(msg)
-        temperature=float(temperature_conditon["temperature"])
-        sequenceNum=temperature_conditon["sequenceNum"]
-        cameraID=temperature["cameraID"]
+        payload=json.loads(msg)
+        temperature=float(payload["temperature"])
+        sequenceNum=payload["sequenceNum"]
+        cameraID=payload["cameraID"]
         if temperature >= 37:
             self.publish(cameraID,sequenceNum,temperature)
         else:
