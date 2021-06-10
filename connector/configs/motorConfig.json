@@ -8,5 +8,5 @@
   "enterZone":"zone1",
   "leavingZone":"zone2",
   "entrance":"None",
-  "homeCatAddress": "http://192.168.43.121:8090"
+  "homeCatAddress": "http://172.17.0.2:8090"
 }

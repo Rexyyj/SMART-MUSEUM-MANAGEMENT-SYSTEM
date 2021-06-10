@@ -2,7 +2,7 @@
     "serviceId": "lightcontrol0",
     "broker": "test.mosquitto.org",
     "port": 1883,
-    "homeCatAddress": "http://172.17.0.4:8090",
+    "homeCatAddress": "http://172.17.0.2:8090",
     "topicPub":"/Polito/iot/SMMS/museum01/floor1/light",
     "topicSub":"/Polito/iot/SMMS/museum01/crowdControl"
     

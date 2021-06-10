@@ -1,8 +1,8 @@
+
 {
-    "serviceId": "crowdcontrol0",
+    "serviceId": "camera0",
     "broker": "test.mosquitto.org",
     "port": 1883,
     "homeCatAddress": "http://172.17.0.2:8090",
-    "topicPub":"/Polito/iot/SMMS/museum01/crowdControl"
-    
-}
+    "topicPub":"/Polito/iot/SMMS/museum01/overtempTopic"
+  }

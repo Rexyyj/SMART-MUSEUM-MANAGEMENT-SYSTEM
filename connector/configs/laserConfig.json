@@ -7,5 +7,8 @@
   "floor": "1",
   "enterZone": "zone1",
   "leavingZone": "outdoor",
-  "homeCatAddress": "http://192.168.1.100:8090"
+  "homeCatAddress": "http://172.17.0.2:8090",
+  "bindingDevType":"motor",
+  "bindingDevId":"motor0",
+  "bindingDevTopic":"/Polito/iot/SMMS/museum01/floor1/motor"
 }

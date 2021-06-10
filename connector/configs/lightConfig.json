@@ -6,5 +6,5 @@
   "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch",
   "floor":"1",
   "controlZone":"zone1",
-  "homeCatAddress": "http://localhost:8090"
+  "homeCatAddress": "http://172.17.0.2:8090"
 }
