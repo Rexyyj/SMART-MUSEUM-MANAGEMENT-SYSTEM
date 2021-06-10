@@ -75,7 +75,7 @@ class Camera():
         payload=json.loads(msg)
         temperature=float(payload["temperature"])
         sequenceNum=payload["sequenceNum"]
-        cameraID=payload["cameraID"]
+        cameraID=payload["id"]
         if temperature >= 37:
             self.publish(cameraID,sequenceNum,temperature)
         else:

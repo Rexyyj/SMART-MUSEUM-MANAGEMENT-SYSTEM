@@ -27,13 +27,13 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 * Data send to message borker(publisher)
   1. Laser sensors
    <br>Topic:   /museumId/floorNum/gateNum/laser
-   <br>Message: ```{"laserId":"laser0","timestamp":"","enter":0, "leaving":0} ```
+   <br>Message: ```{"id":"laser0","timestamp":"","enter":0, "leaving":0} ```
    <br>Note: numbers could be positive integer or 0
    <br/>
 
     2. Infraed camera
     <br>Topic:  /museumId/entranceId
-	<br>Message:```{"cameraId":"camera0","timestamp":"","sequenceNum":0, "temperature":36.5} ```
+	<br>Message:```{"id":"camera0","timestamp":"","sequenceNum":0, "temperature":36.5} ```
 	<br>Note:   "secquenceNum" should be double type, "temperature" should be float
     <br/>    
 
