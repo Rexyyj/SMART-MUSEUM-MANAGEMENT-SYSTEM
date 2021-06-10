@@ -94,6 +94,4 @@ if __name__ == "__main__":
     while (True):
         if input() == 'q':
             break
-
-
-    Camera.stop()
+    camera.stop()
