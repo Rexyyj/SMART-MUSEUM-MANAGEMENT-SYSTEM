@@ -73,7 +73,7 @@ class Camera():
 
         
         temperature_conditon=json.loads(msg)
-        temperature=int(temperature_conditon["temperature"])
+        temperature=float(temperature_conditon["temperature"])
         sequenceNum=temperature_conditon["sequenceNum"]
         cameraID=temperature["cameraID"]
         if temperature >= 37:
@@ -85,7 +85,7 @@ class Camera():
 if __name__ == "__main__":
     configFile = input("Enter the location of configuration file: ")
     if len(configFile) == 0:
-        configFile = "./configs/cameraControl"
+        configFile = "./configs/cameraControl.json"
     camera= Camera(configFile)
     camera.start()
 
