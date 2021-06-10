@@ -54,11 +54,12 @@ class LightConnector():
             print(json.dumps(data))
             self.workingStatus = "on"
         elif topic == self.lightTopic:
-            if data["id"]==self.deviceId:
-                brightness = int(data["brightness"])
-                self.setLightStatus(brightness)
-            else:
-                pass
+            if self.workingStatus == "on":
+                if data["id"]==self.deviceId:
+                    brightness = int(data["brightness"])
+                    self.setLightStatus(brightness)
+                else:
+                    pass
 
     def setLightStatus(self, status):
         self.brightness = status
