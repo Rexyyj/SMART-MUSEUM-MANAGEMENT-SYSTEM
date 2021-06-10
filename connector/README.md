@@ -40,12 +40,12 @@ This folder contains the implementation of connectors form Smart Museum Manageme
 * Data receive form message borker(subscriber)
     1. Motor controller
     <br>Topic:  Not set yet
-	<br>Message:```{"motroControlerId":"motor0","timestamp":"", "targetStatus":"open"}```
+	<br>Message:```{"id":"motor0","timestamp":"", "targetStatus":"open"}```
 	<br>Note:   value of "targetStatus" could be "open"/"close"
     
     2. Light controller
     <br>Topic:  Not set yet
-	<br>Message:```{"lightControllerId":"light0","timestamp":"","brightness":0}```
+	<br>Message:```{"id":"light0","timestamp":"","brightness":0}```
 	<br>Note:   value of "brightness" could be in range [0,100], means(0% to 100%)
 
 ## Registration Data Format

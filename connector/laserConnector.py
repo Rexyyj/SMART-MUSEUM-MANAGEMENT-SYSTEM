@@ -29,13 +29,20 @@ class LaserConnector():
         self.switchTopic = self.conf["switchTopic"]
         self.__msg = {"id": self.deviceId,
                       "timestamp": "", "enter": 0, "leaving": 0}
+        self.bindingTopic = self.conf["bindingDevTopic"]
+        self.bindingId= self.conf["bindingDevId"]
+        self.bindingStatus = True
+
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
                   "topic": self.laserTopic,
                   "attribute": {"floor": self.conf["floor"],
                                 "enterZone": self.conf["enterZone"],
-                                "leavingZone": self.conf["leavingZone"]}}
+                                "leavingZone": self.conf["leavingZone"],
+                                "bindingDevType":self.conf["bindingDevType"],
+                                "bindingDevId":self.conf["bindingDevId"],
+                                "bindingDevTopic":self.conf["bindingDevTopic"]}}
         self.Reg = RegManager(self.conf["homeCatAddress"])
         self.museumSetting = self.Reg.register(regMsg)
 
@@ -47,6 +54,7 @@ class LaserConnector():
     def start(self):
         self.client.start()
         self.client.mySubscribe(self.switchTopic)
+        self.client.mySubscribe(self.bindingTopic)
 
     def stop(self):
         self.client.stop()
@@ -62,9 +70,15 @@ class LaserConnector():
 
     def notify(self, topic, msg):
         data = json.loads(msg)
-        print(json.dumps(data))
-        # ToDo: update process of input msg
-        self.workingStatus = "on"
+        if topic ==self.switchTopic:
+            print(json.dumps(data))
+            # ToDo: update process of input msg
+            self.workingStatus = "on"
+        elif topic ==self.bindingTopic:
+            if data["targetStatus"]=="open":
+                self.bindingStatus=True
+            elif data["targetStatus"]=="close":
+                self.bindingStatus=False
 
     def manual(self):
         while True:
@@ -100,15 +114,24 @@ class LaserConnector():
     def automatic(self):
         counter = 0
         try:
-            while True:
-                counter = counter + 1
-                if counter < 10:
-                    self.publish(int(gauss(10, 5)), int(gauss(3, 2)))
-                elif counter < 20:
-                    self.publish(int(gauss(3, 2)), int(gauss(10, 5)))
+            while self.workingStatus:
+                if self.bindingStatus:
+                    counter = counter + 1
+                    if counter < 10:
+                        self.publish(int(gauss(10, 5)), int(gauss(3, 2)))
+                    elif counter < 20:
+                        self.publish(int(gauss(3, 2)), int(gauss(10, 5)))
+                    else:
+                        counter = 0
+                    time.sleep(10)
                 else:
-                    counter = 0
-                time.sleep(10)
+                    if counter < 10:
+                        self.publish(0, int(gauss(3, 2)))
+                    elif counter < 20:
+                        self.publish(0, int(gauss(10, 5)))
+                    else:
+                        counter = 0
+                    time.sleep(10)
         except:
             pass
 
