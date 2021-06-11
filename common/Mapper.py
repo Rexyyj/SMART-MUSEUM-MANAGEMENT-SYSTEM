@@ -73,3 +73,10 @@ class Mapper():
                     mot.add(dev["id"])
             ent2mot[ent]=list(mot)
         return ent2mot # Format: {"entrance1":["motor001","motor002"]}
+
+    def getMap_camera2motor(self,camra_device):
+        cam2mot={}
+        for cam in camra_device:
+            cam2mot[cam["id"]]=cam["attribute"]["motorControllerId"]
+        
+        return cam2mot # Format: {"camera0":"motor0"}
