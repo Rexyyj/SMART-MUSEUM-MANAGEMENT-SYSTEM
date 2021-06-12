@@ -1,5 +1,6 @@
 import time
 import telepot
+from telepot import Bot
 from telepot.loop import MessageLoop
 from telepot.namedtuple import InlineKeyboardMarkup, InlineKeyboardButton
 import json
@@ -30,20 +31,32 @@ class Telegrambot():
                                 "topic": self.switchTopic,
                                 }}
 
-    def on_chat_message(msg):
+    def initial_message(msg):
+        #design as reply keyboard
         content_type, chat_type, chat_id = telepot.glance(msg)
-
+        self.chatIDs.append(chat_ID)
+        message = msg['text']
         if msg['text'] == '/start':
-           bot.sendMessage(chat_id, 'Welcome to the museum!', {
-               "reply_markup": {
-                   "keyboard": ["Client"], ["Administrator"]}
-               })
+            mark_up = ReplyKeyboardMarkup(keyboard=[['/Client'], ['/Administrator']],
+                                          one_time_keyboard=True)
+            bot.sendMessage(chat_id, text='Welcome to the museum!', reply_markup=mark_up)
+        else:
+            bot.sendMessage(chat_id, 'Please enter the correct command!')
 
-        elif msg['text'] == '/info':
-           bot.sendMessage(chat_id, 'What do you want to know about the Museum?', {
-               "reply_markup": {
-                   "keyboard": ["historical data"], ["Current number of people in each area"]}
-               })
+
+
+    def client_message(self, msg):
+        content_type, chat_type, chat_id = telepot.glance(msg)
+        print(content_type, chat_type, chat_id)
+        message = msg['text']
+        if msg['text'] == '/client':
+           bot.sendMessage(chat_id,
+                           parse_mode = 'Markdown',
+                           text='*What do you want to know about the Museum?*/n [historical data](https://thingspeak.com/channels/1334459)/n[Current number of people in each area](https://thingspeak.com/channels/1334459)'
+                           )
+
+        elif msg['text'] == '/Administrator':
+           bot.sendMessage(chat_id, 'Please enter the password')
 
            bot.inlineKeyboardMarkup = {};
            inlineKeyboardMarkup.inline_keyboard = [];
