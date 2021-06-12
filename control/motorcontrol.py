@@ -80,7 +80,7 @@ class motorcontrol():
     def notify(self, topic, msg):
         message = json.loads(msg)
         if topic == self.camTopice:
-            cameraID = message["cameraId"]
+            cameraID = message["id"]
             motorId = self.camera2motor(cameraID)
             self.publish(motorId, "close")
             self.motor_status[motorId]={"current":"close","lock":"True"}
@@ -88,7 +88,7 @@ class motorcontrol():
             t.start()
             # Thie area I need a camera 2 motor.The register info include the camera relating motorcontrolID
         elif topic == self.crowdTopic:
-            zonepeoplenumber = message  # zone{zone1:"xx",zone2:"xx"....}
+            zonepeoplenumber = message["data"]  # zone{zone1:"xx",zone2:"xx"....}
             overzone = []  # save the zone whose number is over limited number
             for zone in set(zonepeoplenumber.keys()):
                 if int(zonepeoplenumber[zone]) >= int(self.zoneCapa[zone]):

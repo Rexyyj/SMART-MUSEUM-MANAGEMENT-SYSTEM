@@ -46,7 +46,7 @@ class Camera():
 
     def publish(self,id,seq,temperature):
         msg=Message={"status":"danger",
-                    "cameraId":id,
+                    "id":id,
                     "sequenceNum":seq,
                     "timestamp":str(datetime.datetime.now()),
                     "temperature":temperature}

@@ -68,7 +68,7 @@ class Lightcontrol():
         self.Reg.delete("service", self.clientID)
    
     def publish(self, lightId, brightness):
-        msg = {"lightControllerId":lightId,"timestamp":str(datetime.datetime.now()), "brightness":str(brightness)}
+        msg = {"id":lightId,"timestamp":str(datetime.datetime.now()), "brightness":str(brightness)}
         self.client.myPublish(self.topic, msg)
         print("Published: " + json.dumps(msg))
 
