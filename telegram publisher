@@ -29,7 +29,7 @@ class Ledswitch:
 
 
 if __name__ == "__main__":
-	conf=json.load(open("settings.json"))
+	conf=json.load(open("configuration.json"))
 	broker=conf["broker"]
 	port=conf["port"]
 	Ledswitch = Ledswitch("Ledswitch","Museum/led",broker,port)
