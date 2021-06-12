@@ -1,5 +1,5 @@
 {
-  "deviceId": "motor156153",
+  "deviceId": "motor1",
   "broker": "test.mosquitto.org",
   "port": 1883,
   "motorTopic": "/Polito/iot/SMMS/museum01/floor1/motor",
