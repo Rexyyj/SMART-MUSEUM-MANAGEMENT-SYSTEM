@@ -48,7 +48,7 @@ class motorcontrol():
         self.cameras = self.Reg.getData("devices", "camera", None)["data"]
         # create a device id to zone map in format {"motor1":{"enterZone":"zone1","leavingZone":"zone2","currentStatus":close}}
         self.zone2motor = self.mapper.getMap_zone2device_LM(
-            self, self.motors, self.museumSetting["zones"])
+            self.motors, self.museumSetting["zones"])
         self.motor2zone = self.mapper.getMap_device2zone_LM(self, self.motors)
         self.camera2motor = self.mapper.getMap_camera2motor(self, self.cameras)
         self.zoneCapa =self.museumSetting["zones"]
