@@ -1,12 +1,12 @@
 {
-  "deviceId": "motor287513",
+  "deviceId": "motor156153",
   "broker": "test.mosquitto.org",
   "port": 1883,
   "motorTopic": "/Polito/iot/SMMS/museum01/floor1/motor",
   "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch",
   "floor":"1",
-  "enterZone":"zone1",
-  "leavingZone":"outdoor",
-  "entrance":"None",
+  "enterZone":"zone2",
+  "leavingZone":"zone1",
+  "entrance":"Entrance1",
   "homeCatAddress": "http://172.17.0.2:8090"
 }
