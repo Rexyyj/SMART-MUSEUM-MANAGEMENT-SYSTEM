@@ -14,7 +14,7 @@ import datetime
 
 class LaserConnector():
 
-    def __init__(self, confAddr,seed):
+    def __init__(self, confAddr):
         try:
             self.conf = json.load(open(confAddr))
         except:
@@ -46,7 +46,7 @@ class LaserConnector():
         self.Reg = RegManager(self.conf["homeCatAddress"])
         self.museumSetting = self.Reg.register(regMsg)
 
-        seed(seed)
+        seed(1)
 
         if self.museumSetting == "":
             exit()
@@ -141,10 +141,10 @@ if __name__ == "__main__":
     configFile = input("Enter the location of configuration file: ")
     if len(configFile) == 0:
         configFile = "./configs/laserConfig.json"
-    seed = input("Choose a random seed: ")
-    if len(seed) ==0:
-        seed = "1"
-    laserConnector = LaserConnector(configFile,int(seed))
+    # seed = input("Choose a random seed: ")
+    # if len(seed) ==0:
+    #     seed = "1"
+    laserConnector = LaserConnector(configFile)
     laserConnector.start()
     time.sleep(1)
 
