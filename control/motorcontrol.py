@@ -81,7 +81,7 @@ class motorcontrol():
         message = json.loads(msg)
         if topic == self.camTopice:
             cameraID = message["id"]
-            motorId = self.camera2motor(cameraID)
+            motorId = self.camera2motor[cameraID]
             self.publish(motorId, "close")
             self.motor_status[motorId]={"current":"close","lock":"True"}
             t = threading.Thread(target=self.lock_reopen,args=(motorId,10,))
