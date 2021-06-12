@@ -107,7 +107,7 @@ class motorcontrol():
                         else:
                             pass
             # Deal with zones with people within capacity
-            for zone in (set(self.zoneCapa.keys())-{"outdoor"}-overzone):
+            for zone in (set(self.zoneCapa.keys())-{"outdoor"}-set(overzone)):
                 motorlist = self.zone2motor[zone]
                 for motor in motorlist:
                     if self.motor2zone[motor]["enterZone"] == zone:
