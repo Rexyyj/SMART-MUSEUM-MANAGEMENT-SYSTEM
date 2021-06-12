@@ -93,11 +93,15 @@ class Lightcontrol():
         print(payload) 
         timeH = int(datetime.datetime.now().hour)
         for zone in set(payload.keys()):
-            self.zones[zone] = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
-            lightId = self.zone2light[zone]
-            for id in lightId:
-                self.publish(id,self.zones[zone])
-            time.sleep(0.5)
+            brightness = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
+            if self.zones[zone] == brightness:
+                pass
+            else:
+                self.zones[zone] = brightness
+                lightId = self.zone2light[zone]
+                for id in lightId:
+                    self.publish(id,self.zones[zone])
+                time.sleep(0.5)
 
     
     def thingSpeakUploader(self):
