@@ -16,7 +16,7 @@ class Telegrambot():
         self.serviceId = self.conf["serviceId"]
         self.client = MyMQTT("Smartmubot", self.conf["broker"], int(self.conf["port"]), self)
         self.client.start()
-        self.overtempTopic = self.conf["overtempTopic"]
+        self.overtempTopic = self.conf["Polito/iot/SMMS/museum01/overtempTopic"]
         self.lightTopic = self.conf["lightTopic"]
         self.switchTopic = self.conf["switchTopic"]
         self.__message = {"start": "", "info": ""}
@@ -26,9 +26,9 @@ class Telegrambot():
                   "id": self.serviceId,
                   "type": "telegram",
                   "attribute": {"chatid": self.conf["client"],
-                                "topic": self.overtempTopic,
-                                "topic": self.lightTopic,
-                                "topic": self.switchTopic,
+                                "topic1": self.Polito/iot/SMMS/museum01/overtempTopic,
+                                "topic2": self.lightTopic,
+                                "topic3": self.switchTopic,
                                 }}
 
     def initial_message(msg):
@@ -45,7 +45,7 @@ class Telegrambot():
 
 
 
-    def client_message(self, msg):
+    def user_message(self, msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
         print(content_type, chat_type, chat_id)
         message = msg['text']
@@ -57,36 +57,31 @@ class Telegrambot():
 
         elif msg['text'] == '/Administrator':
            bot.sendMessage(chat_id, 'Please enter the password')
-
-           bot.inlineKeyboardMarkup = {};
-           inlineKeyboardMarkup.inline_keyboard = [];
-           bot.keyboardRow = [];
-
-           bot.keyboardButton1 = {
-               text: "historical data",
-               url: "https://thingspeak.com/channels/1334459"
-           };
-
-           bot.keyboardButton2 = {
-               text: "Current number of people in each area",
-               url: "https://thingspeak.com/channels/1334459"
-           };
-           bot.keyboardButton3 = {
-               text: "Total energy savings",
-               url: "https://thingspeak.com/channels/1334459"
-           };
-        if msg['text'] == '/switchoff':
-           mark_up = ReplyKeyboardMarkup(keyboard=[['zoneA'],['zoneB'],['zoneC'],['zoneD']], one_time_keyboard=True)
-           bot.sendMessage(chat_id, text='What light would you like to turn off?', reply_markup=mark_up)
-        elif msg['text'] == 'switchon':
-           bot.sendMessage(chat_id, text='turn on all the lights', reply_markup=mark_up)
-
-
-
-    def get_url():
-        contents = requests.get('https://thingspeak.com/channels/1334459').json()
-        url = contents['url']
-        return urlcc
+           #authentication   URL button callback=url
+           if msg['text'] == 'password':
+               bot.keyboardRow = 2;
+               keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                   [InlineKeyboardButton(text='historical data', url='https://thingspeak.com/channels/1334459')],
+                   [InlineKeyboardButton(text='"Current number of people in each area"', url='https://thingspeak.com/channels/1334459')],
+                   [InlineKeyboardButton(text='Total energy savings', url='https://thingspeak.com/channels/1334459')],
+               ])
+               bot.sendMessage(chat_id, 'What would you like to do?', reply_markup=keyboard)
+               if msg['text'] == '/switchoff':
+                   mark_up = ReplyKeyboardMarkup(keyboard=[['zoneA'], ['zoneB'], ['zoneC'], ['zoneD']],
+                                                 one_time_keyboard=True)
+                   payload = self.__message.copy()
+                   payload['e'][0]['v'] = "off"
+                   payload['e'][0]['t'] = time.time()
+                   self.client.myPublish(self.switchTopic,self.lightTopic,payload)
+                   bot.sendMessage(chat_id, text='What light would you like to turn off?', reply_markup=mark_up)
+               elif msg['text'] == '/switchon':
+                   payload = self.__message.copy()
+                   payload['e'][0]['v'] = "on"
+                   payload['e'][0]['t'] = time.time()
+                   self.client.myPublish(self.switchTopic, self.lightTopic, payload)
+                   bot.sendMessage(chat_id, text='turn on all the lights', reply_markup=mark_up)
+           else :
+               bot.sendMessage(chat_id, 'Please enter correct password')
 
     def sendImageRemoteFile(img_url):
         url = "https://api.telegram.org/bot<Token>/sendPhoto";
@@ -118,8 +113,9 @@ if __name__ == "__main__":
       "api_token": '1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ',
       "proxy": "http://127.0.0.1:8118"
      }
-    bot = telepot.Bot(TOKEN)
-    MessageLoop(bot, handle).run_as_thread()
+    conf = json.load(open("configuration.json."))
+    bot: Bot = telepot.Bot(TOKEN)
+    MessageLoop(bot, initial_message,user_message,notify).run_as_thread()
     print ('waiting ...')
 
 # Keep the program running.
