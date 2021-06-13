@@ -180,4 +180,3 @@ Device/Service log out: (Using DELETE),using:
 ```    
 type: device,service
 * body is not allow in DELETE
-* no return value
