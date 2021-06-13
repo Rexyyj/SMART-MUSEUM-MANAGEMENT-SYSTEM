@@ -87,7 +87,7 @@ class MsgBroker():
         while self.workingStatus:
             for key in list(self.tschannels.keys()):
                 self.tschannels[key].UploadData(self.data[key]["crowd"],self.data[key]["light"])
-                time.sleep(10)
+                time.sleep(20)
 
 
 if __name__ == "__main__":
