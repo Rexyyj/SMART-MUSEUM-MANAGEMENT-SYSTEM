@@ -1,0 +1,8 @@
+{
+    "URL":"https://api.thingspeak.com/channels",
+    "api_key": "Q6FXCOZCTUWFXG60",
+    "mqttAPIKey": "BGL8BLI28LL8MOKS",
+    "public_flag": "true",
+    "field1": "crowd",
+    "field2": "light"
+  }

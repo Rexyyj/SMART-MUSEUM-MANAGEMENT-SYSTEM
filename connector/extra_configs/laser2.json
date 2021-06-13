@@ -1,0 +1,14 @@
+{
+  "deviceId": "laser1",
+  "broker": "test.mosquitto.org",
+  "port": 1883,
+  "laserTopic": "/Polito/iot/SMMS/museum01/floor1/laser",
+  "switchTopic": "/Polito/iot/SMMS/museum01/mainSwitch",
+  "floor": "1",
+  "enterZone": "zone2",
+  "leavingZone": "zone1",
+  "homeCatAddress": "http://172.17.0.2:8090",
+  "bindingDevType":"motor",
+  "bindingDevId":"motor1",
+  "bindingDevTopic":"/Polito/iot/SMMS/museum01/floor1/motor"
+}

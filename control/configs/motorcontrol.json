@@ -1,0 +1,9 @@
+{
+  "serviceId": "motorcontrol0",
+  "broker": "test.mosquitto.org",
+  "port": 1883,
+  "homeCatAddress": "http://172.17.0.2:8090",
+  "topicPub": "/Polito/iot/SMMS/museum01/floor1/motor",
+  "topicSub": "/Polito/iot/SMMS/museum01/crowdControl",
+  "topicSub1": "/Polito/iot/SMMS/museum01/overtempTopic"
+}

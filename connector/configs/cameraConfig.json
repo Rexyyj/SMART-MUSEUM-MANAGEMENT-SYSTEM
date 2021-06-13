@@ -1,0 +1,14 @@
+{
+  "deviceId": "camera287513",
+  "broker": "test.mosquitto.org",
+  "port": 1883,
+  "cameraTopic": "/Polito/iot/SMMS/museum01/floor1/gate1/camera",
+  "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch",
+  "floor":"1",
+  "entranceId":"Entrance1",
+  "motorControllerId":"motor1",
+  "homeCatAddress": "http://172.17.0.2:8090",
+  "RESTaddr":  "http://172.17.0.2:8091",
+  "rawImgAddress": "./configs/raw-headshot/",
+  "storeImgAddress": "./records/generatedImages/"
+}
