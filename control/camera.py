@@ -30,7 +30,7 @@ class Camera():
         # Register service to homeCat
         regMsg = {"registerType": "service",
                   "id": self.clientID,
-                  "type": "camera",
+                  "type": "cameraService",
                   "attribute": None
                   }
         self.Reg = RegManager(self.homeCatAddr)

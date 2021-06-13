@@ -57,18 +57,13 @@ class TSchannel():
 
 
     # target could be crowd / light
-    def UploadData(self,target,value):
+    def UploadData(self,crowdNum,lightNum):
         MQTT_broker = 'mqtt.thingspeak.com'
         writeAPIKey = self.ChannelInfo['api_keys'][0]['api_key']
 
         ChannelID = self.ChannelInfo['id']
         topic = "channels/" + str(ChannelID) + "/publish/" + str(writeAPIKey)
-        if target == "crowd":
-            payload = "field1=" + str(value) 
-        elif target=="light":
-            payload = "field2=" + str(value)
-        else:
-            raise ValueError("Upload target not exist")
+        payload = "field1=" + str(crowdNum) + "&field2=" + str(lightNum)
         try:
             print("Sending msg to thingSpeak...")
             publish.single(topic, payload, hostname=MQTT_broker, transport='websockets', port=80, auth={'username': 'MQTT_publisher', 'password': self.MQTT_key})

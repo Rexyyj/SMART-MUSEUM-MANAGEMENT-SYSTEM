@@ -7,10 +7,8 @@ Created on Fri May  7 21:36:02 2021
 from common.RegManager import *
 from common.MyMQTT import *
 from common.Mapper import Mapper
-from thinkSpeak.ThingSpeakChannel import TSchannel
 import json
 import time
-import requests
 import datetime
 import threading
 

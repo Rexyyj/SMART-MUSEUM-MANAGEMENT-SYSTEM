@@ -8,11 +8,7 @@ Created on Tue Mar  2 16:45:30 2021
 from common.RegManager import *
 from common.MyMQTT import *
 from common.Mapper import Mapper
-from thinkSpeak.ThingSpeakChannel import  TSchannel
 import json
-import time
-import requests
-import threading
 import datetime
 class Customermanager():
 
@@ -51,13 +47,6 @@ class Customermanager():
         self.zone = {}
         for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
             self.zone[zoneDef] = 20
-        time.sleep(1)
-        # create thingspeak instances
-        thingspeak = self.Reg.getData("service","thingspeak",None)["data"][0]
-        channels = thingspeak["attribute"]["channels"]
-        self.tschannels ={}
-        for channel in channels:
-            self.tschannels[channel["name"]] = TSchannel(config=thingspeak["attribute"]["config"],channelInfo=channel)
 
 
     def start(self):
@@ -111,11 +100,7 @@ class Customermanager():
         # self.client.myPublish(self.topic, json.dumps(temp))
         # 传输topic需要跟thinkspeak
 
-    def thingSpeakUploader(self):
-        while self.workingStatus:
-            for key in list(self.tschannels.keys()):
-                self.tschannels[key].UploadData("crowd",self.zone[key])
-                time.sleep(10)
+
 
 
 
@@ -126,9 +111,7 @@ if __name__ == "__main__":
         configFile = "./configs/crowdControl.json"
 
     customermanager = Customermanager(configFile)
-    t = threading.Thread(target=customermanager.thingSpeakUploader)
     customermanager.start()
-    t.start()
     print("Crowd control service running...")
     print("Enter 'q' to exit")
     while (True):

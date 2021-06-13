@@ -8,12 +8,9 @@ Created on Thu May  6 00:17:44 2021
 from common.RegManager import *
 from common.MyMQTT import *
 from common.Mapper import Mapper
-from thinkSpeak.ThingSpeakChannel import TSchannel
 import json
 import time
-import requests
 import datetime
-import threading
  
     
 class Lightcontrol():
@@ -51,12 +48,6 @@ class Lightcontrol():
         for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
             self.zones[zoneDef] = 0
 
-        thingspeak = self.Reg.getData("service","thingspeak",None)["data"][0]
-        channels = thingspeak["attribute"]["channels"]
-        self.tschannels ={}
-        for channel in channels:
-            self.tschannels[channel["name"]] = TSchannel(config=thingspeak["attribute"]["config"],channelInfo=channel)
-        print()
 
     def start(self):
         self.client.start()
@@ -104,11 +95,6 @@ class Lightcontrol():
                 time.sleep(0.5)
 
     
-    def thingSpeakUploader(self):
-        while self.workingStatus:
-            for key in list(self.tschannels.keys()):
-                self.tschannels[key].UploadData("light",self.zones[key])
-                time.sleep(10)
 
 
 if __name__=="__main__":
@@ -116,10 +102,7 @@ if __name__=="__main__":
     if len(configFile) == 0:
         configFile = "./configs/lightControl.json"
     lightcontrol = Lightcontrol(configFile)
-    
-    t = threading.Thread(target=lightcontrol.thingSpeakUploader)
     lightcontrol.start()
-    t.start()
     print("Crowd control service running...")
     print("Enter 'q' to exit")
     while (True):

@@ -1,0 +1,9 @@
+{
+    "serviceId": "msgbroker0",
+    "broker": "test.mosquitto.org",
+    "port": 1883,
+    "homeCatAddress": "http://172.17.0.2:8090",
+    "lightTopic":"/Polito/iot/SMMS/museum01/floor1/light",
+    "crowdTopic":"/Polito/iot/SMMS/museum01/crowdControl"
+    
+}
