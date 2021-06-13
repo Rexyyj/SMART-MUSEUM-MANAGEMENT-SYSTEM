@@ -93,7 +93,7 @@ class MsgBroker():
 if __name__ == "__main__":
     configFile = input("Enter the location of configuration file: ")
     if len(configFile) == 0:
-        configFile = "./configs/cameraControl.json"
+        configFile = "./config.json"
     msgBroker= MsgBroker(configFile)
     t = threading.Thread(target=msgBroker.thingSpeakUploader)
 
