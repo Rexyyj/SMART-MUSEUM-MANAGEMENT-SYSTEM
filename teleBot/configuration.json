@@ -1,7 +1,13 @@
 {
-  "tokenBot": "1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ",
-  "bot": "Smartmubot",
-  "chatIDs": ["chatID1","chatID2","chatID3"],
-  "message": ["switchon","switchoff","start","client","Administrator"],
-  "topic":["/Polito/iot/SMMS/museum01/overtempTopic","switchTopic","lightTopic"]
+    "token": "1763352169:AAEcAAE8wmmNIYg1PQ8RH6yMRDZ3FV7ebHQ",
+    "chatIDs": ["chatID1","chatID2","chatID3"],
+    "message": ["switchon","switchoff","start","client","Administrator"],
+
+
+    "serviceId": "Smartmubot",
+    "broker": "test.mosquitto.org",
+    "port": 1883,
+    "homeCatAddress": "http://172.17.0.2:8090",
+    "overTempTopic":"/Polito/iot/SMMS/museum01/overtempTopic",
+    "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch"
 }
