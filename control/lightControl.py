@@ -70,7 +70,7 @@ class Lightcontrol():
         if time > 10 and time< 15:
             brightness = 70
 
-        if number == 0 and origin_brightness >=10 :
+        if int(number) == 0 and int(origin_brightness) >=10 :
             brightness = origin_brightness - 10
         
         return brightness
