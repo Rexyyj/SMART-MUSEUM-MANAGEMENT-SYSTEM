@@ -85,7 +85,7 @@ class Camera():
 if __name__ == "__main__":
     configFile = input("Enter the location of configuration file: ")
     if len(configFile) == 0:
-        configFile = "./config.json"
+        configFile = "./configs/cameraControl.json"
     camera= Camera(configFile)
     camera.start()
 
