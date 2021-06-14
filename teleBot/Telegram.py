@@ -1,4 +1,5 @@
 from re import S
+import re
 import time
 from requests.sessions import merge_setting
 import telepot
@@ -13,7 +14,10 @@ import json
 import requests
 import time
 import io
-
+import base64
+import pickle
+import cv2
+import os
 
 class Telegrambot():
 
@@ -59,6 +63,8 @@ class Telegrambot():
         self.mapper =Mapper()
         self.lights = self.Reg.getData("devices", "light", None)["data"]
         self.zone2light = self.mapper.getMap_zone2Light(self.lights,self.museumSetting["zones"])
+        self.cameras = self.Reg.getData("devices", "camera", None)["data"]
+        self.cam2entrance = self.mapper.getMap_camera2entrance(self.cameras)
         self.chat_auth = {}
         self.switchMode = "None"
 
@@ -73,7 +79,7 @@ class Telegrambot():
         self.workingStatus = False
         self.client.stop()
         # unregister device
-        self.Reg.delete("service", self.serviceID)
+        self.Reg.delete("service", self.serviceId)
 
     def msg_handler(self,msg):
         content_type, chat_type, chat_id = telepot.glance(msg)
@@ -113,7 +119,7 @@ class Telegrambot():
             else:
                 self.bot.sendMessage(chat_id, "You haven't logged in!")
         else:
-            if self.switchMode == "On" or self.switchMode=="Off":
+            if self.switchMode == "on" or self.switchMode=="off":
                 if self.check_auth(chat_id) ==True:
                     for switch in self.possibleSwitch:
                         if switch[0] == message:
@@ -222,29 +228,40 @@ class Telegrambot():
             for light in lights:
                 self.publish(target=light,switchTo=switchMode)
 
+    def getImage(self, uri, seq):
+        uri = uri+"/"+str(seq)
+        response = requests.get(uri,None)
+        img =self.exactImageFromResponse(response)
+        return img
 
-    def sendImageRemoteFile(img_url):
-        url = "https://api.telegram.org/bot<Token>/sendPhoto"
-        remote_image = requests.get(img_url)
-        photo = io.BytesIO(remote_image.content)
-        photo.name = 'img.png'
-        files = {'photo': photo}
-        data = {'chat_id': "YOUR_CHAT_ID"}
-        r = requests.post(url, files=files, data=data)
-        print(r.status_code, r.reason, r.content)
+    def exactImageFromResponse(self,response):
+        data = response.text
+        imgs = json.loads(data)["img"]
+        img = self.json2im(imgs)
+        return img
+
+    def json2im(self,jstr):
+        """Convert a JSON string back to a Numpy array"""
+        load = json.loads(jstr)
+        imdata = base64.b64decode(load['image'])
+        im = pickle.loads(imdata)
+        return im
 
     def notify(self, topic, msg):
-        print (msg)
-        # chat_id = update.message.chat.id
-        # if topic == self.overtempTopic:
-        #     with open('image.jpg', 'rb') as overtemperature_image:
-        #         caption = "<a herf = 'https://>"
-        #         bot = send_photo(
-        #             chat_id,
-        #             photo=overtemperature_image,
-        #             caption=caption,
-        #             parse_mode='HTML'
-        #         )
+        msg = json.loads(msg)
+        info = "ALERT!!Find someone with too high body temperature!!!"
+        print(msg)
+        info2 = "In "+self.cam2entrance[msg["id"]]+" ,with temperature: "+str(msg["temperature"])
+        photo = self.getImage("http://172.17.0.1:8091",msg["sequenceNum"])
+        cv2.imwrite("./temp/"+str(msg["sequenceNum"])+".jpg",photo)
+        if self.chat_auth!=[]:
+            for chat_id in set(self.chat_auth.keys()):
+                if self.chat_auth[chat_id]==True:
+                    self.bot.sendMessage(chat_id, info)
+                    self.bot.sendMessage(chat_id,info2)
+                    
+                    self.bot.sendPhoto(chat_id,photo=open("./temp/"+str(msg["sequenceNum"])+".jpg","rb"))
+        os.remove("./temp/"+str(msg["sequenceNum"])+".jpg")
 
 
 if __name__ == "__main__":
@@ -259,5 +276,8 @@ if __name__ == "__main__":
     print('waiting ...')
 
 # Keep the program running.
-    while 1:
-        time.sleep(10)
+    while (True):
+        if input() == 'q':
+            break
+
+    telegrambot.stop()
