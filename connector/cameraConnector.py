@@ -106,7 +106,7 @@ class CameraConnector():
 
                     self.publish(self.sequenceNum,temp)
 
-                    time.sleep(5)
+                    time.sleep(15)
         except:
             pass
 

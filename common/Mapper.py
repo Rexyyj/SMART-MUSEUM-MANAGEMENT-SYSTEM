@@ -80,3 +80,10 @@ class Mapper():
             cam2mot[cam["id"]]=cam["attribute"]["motorControllerId"]
         
         return cam2mot # Format: {"camera0":"motor0"}
+
+    def getMap_camera2REST(self,camera_device):
+        cam2rest={}
+        for cam in camera_device:
+            cam2rest[cam["id"]]=cam["attribute"]["RESTaddr"]
+        
+        return cam2rest # Format: {"camera0":"http://192.168.1.1"}

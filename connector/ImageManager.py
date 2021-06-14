@@ -13,8 +13,9 @@ import pickle
 class ImageManager():
     exposed = True
 
-    def __init__(self, folder):
-        self.folder = folder
+    def __init__(self, config):
+        self.conf = config
+        self.folder = self.conf["storeImgAddress"]
 
     def GET(self, *uri, **params):
         uriLen = len(uri)
@@ -45,6 +46,15 @@ class ImageManager():
         return im
 
 if __name__=="__main__":
+    configFile = input("Enter the location of configuration file: ")
+    if len(configFile) == 0:
+        configFile = "./configs/cameraConfig.json"
+    try:
+        config = json.load(open(configFile))
+    except:
+        print("Configuration file not found")
+        exit()
+
     conf = {
         '/': {
             'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
@@ -52,7 +62,7 @@ if __name__=="__main__":
         }
     }
     # set this address to host ip address to enable dockers to use REST api
-    cherrypy.server.socket_host='172.17.0.1'
-    cherrypy.config.update({'server.socket_port': 8091})
-    cherrypy.quickstart(ImageManager("./records/generatedImages/"), '/',config=conf)
+    cherrypy.server.socket_host=config["RESTip"]
+    cherrypy.config.update({'server.socket_port': int(config["RESTport"])})
+    cherrypy.quickstart(ImageManager(config), '/',config=conf)
     cherrypy.engine.block()

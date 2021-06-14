@@ -65,6 +65,7 @@ class Telegrambot():
         self.zone2light = self.mapper.getMap_zone2Light(self.lights,self.museumSetting["zones"])
         self.cameras = self.Reg.getData("devices", "camera", None)["data"]
         self.cam2entrance = self.mapper.getMap_camera2entrance(self.cameras)
+        self.cam2rest = self.mapper.getMap_camera2REST(self.cameras)
         self.chat_auth = {}
         self.switchMode = "None"
 
@@ -252,7 +253,8 @@ class Telegrambot():
         info = "ALERT!!Find someone with too high body temperature!!!"
         print(msg)
         info2 = "In "+self.cam2entrance[msg["id"]]+" ,with temperature: "+str(msg["temperature"])
-        photo = self.getImage("http://172.17.0.1:8091",msg["sequenceNum"])
+        imMagAddr = self.cam2rest[msg["id"]]
+        photo = self.getImage(imMagAddr,msg["sequenceNum"])
         cv2.imwrite("./temp/"+str(msg["sequenceNum"])+".jpg",photo)
         if self.chat_auth!=[]:
             for chat_id in set(self.chat_auth.keys()):

@@ -8,7 +8,9 @@
   "entranceId":"Entrance1",
   "motorControllerId":"motor1",
   "homeCatAddress": "http://172.17.0.2:8090",
-  "RESTaddr":  "http://172.17.0.2:8091",
+  "RESTaddr":  "http://172.17.0.1:8091",
+  "RESTip":"172.17.0.1",
+  "RESTport":"8091",
   "rawImgAddress": "./configs/raw-headshot/",
   "storeImgAddress": "./records/generatedImages/"
 }
