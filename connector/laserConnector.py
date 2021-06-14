@@ -71,9 +71,9 @@ class LaserConnector():
     def notify(self, topic, msg):
         data = json.loads(msg)
         if topic ==self.switchTopic:
-            print(json.dumps(data))
-            # ToDo: update process of input msg
-            self.workingStatus = "on"
+          if data["target"]=="ALL" or data["target"]=="laser" or data["target"]==self.deviceId:
+                self.workingStatus = data["switchTo"]
+                print(str(self.deviceId)+" switch to "+data["switchTo"])
         elif topic ==self.bindingTopic:
             if data["targetStatus"]=="open":
                 self.bindingStatus=True
@@ -114,24 +114,27 @@ class LaserConnector():
     def automatic(self):
         counter = 0
         try:
-            while self.workingStatus:
-                if self.bindingStatus:
-                    counter = counter + 1
-                    if counter < 10:
-                        self.publish(int(gauss(10, 5)), int(gauss(3, 2)))
-                    elif counter < 20:
-                        self.publish(int(gauss(3, 2)), int(gauss(10, 5)))
+            while True:
+                if self.workingStatus=="on":
+                    if self.bindingStatus:
+                        counter = counter + 1
+                        if counter < 10:
+                            self.publish(int(gauss(10, 5)), int(gauss(3, 2)))
+                        elif counter < 20:
+                            self.publish(int(gauss(3, 2)), int(gauss(10, 5)))
+                        else:
+                            counter = 0
+                        time.sleep(10)
                     else:
-                        counter = 0
-                    time.sleep(10)
+                        if counter < 10:
+                            self.publish(0, int(gauss(3, 2)))
+                        elif counter < 20:
+                            self.publish(0, int(gauss(10, 5)))
+                        else:
+                            counter = 0
+                        time.sleep(10)
                 else:
-                    if counter < 10:
-                        self.publish(0, int(gauss(3, 2)))
-                    elif counter < 20:
-                        self.publish(0, int(gauss(10, 5)))
-                    else:
-                        counter = 0
-                    time.sleep(10)
+                    pass
         except:
             pass
 

@@ -65,9 +65,10 @@ class CameraConnector():
 
     def notify(self, topic, msg):
         data = json.loads(msg)
-        print(json.dumps(data))
-        # ToDo: update process of input msg
-        self.workingStatus = "on"
+        if data["target"]=="ALL" or data["target"]=="light" or data["target"]==self.deviceId:
+            self.workingStatus = data["switchTo"]
+            print(str(self.deviceId)+" switch to "+data["switchTo"])
+
 
     def replay(self):
         while True:
@@ -91,20 +92,21 @@ class CameraConnector():
         print("Use ctrl+c to terminate automatic message generation")
         try:
             while True:
-                self.sequenceNum = self.sequenceNum + 1
+                if self.workingStatus=="on":
+                    self.sequenceNum = self.sequenceNum + 1
 
-                temp = format(gauss(36.7, 1.3),'.2f')
+                    temp = format(gauss(36.7, 1.3),'.2f')
 
-                rawImg = cv2.imread(self.conf["rawImgAddress"] + str(rawNum) + ".png")
-                rawImg = cv2.resize(rawImg, (480, 640), interpolation=cv2.INTER_AREA)
-                generatedImg = cv2.rectangle(rawImg, (80, 450), (400, 50), (0, 255, 0), 2)
-                generatedImg = cv2.putText(generatedImg, str(temp), (210, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255),
-                                           2, cv2.LINE_AA)
-                cv2.imwrite(self.conf["storeImgAddress"] + str(self.sequenceNum) + ".jpg", generatedImg)
+                    rawImg = cv2.imread(self.conf["rawImgAddress"] + str(rawNum) + ".png")
+                    rawImg = cv2.resize(rawImg, (480, 640), interpolation=cv2.INTER_AREA)
+                    generatedImg = cv2.rectangle(rawImg, (80, 450), (400, 50), (0, 255, 0), 2)
+                    generatedImg = cv2.putText(generatedImg, str(temp), (210, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255),
+                                            2, cv2.LINE_AA)
+                    cv2.imwrite(self.conf["storeImgAddress"] + str(self.sequenceNum) + ".jpg", generatedImg)
 
-                self.publish(self.sequenceNum,temp)
+                    self.publish(self.sequenceNum,temp)
 
-                time.sleep(5)
+                    time.sleep(5)
         except:
             pass
 

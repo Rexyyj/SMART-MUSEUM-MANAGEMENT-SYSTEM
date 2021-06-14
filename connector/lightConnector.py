@@ -50,9 +50,9 @@ class LightConnector():
     def notify(self, topic, msg):
         data = json.loads(msg)
         if topic == self.switchTopic:
-            # ToDo: update process of input msg
-            print(json.dumps(data))
-            self.workingStatus = "on"
+            if data["target"]=="ALL" or data["target"]=="light" or data["target"]==self.deviceId:
+                self.workingStatus = data["switchTo"]
+                print(str(self.deviceId)+" switch to "+data["switchTo"])
         elif topic == self.lightTopic:
             if self.workingStatus == "on":
                 if data["id"]==self.deviceId:

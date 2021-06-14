@@ -52,12 +52,15 @@ class MotorConnector():
     def notify(self, topic, msg):
         data = json.loads(msg)
         if topic == self.switchTopic:
-            # ToDo: update process of input msg
-            print(json.dumps(data))
-            self.workingStatus = "on"
+            if data["target"]=="ALL" or data["target"]=="motor" or data["target"]==self.deviceId:
+                self.workingStatus = data["switchTo"]
+                print(str(self.deviceId)+" switch to "+data["switchTo"])
         elif topic == self.motorTopic:
-            targetStatus = data["targetStatus"]
-            self.setDoorStatus(targetStatus)
+            if self.workingStatus=="on":
+                targetStatus = data["targetStatus"]
+                self.setDoorStatus(targetStatus)
+            else:
+                pass
 
     def setDoorStatus(self, status):
         self.doorStatus = status

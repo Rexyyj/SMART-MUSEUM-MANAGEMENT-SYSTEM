@@ -52,6 +52,8 @@ class Telegrambot():
             self.possibleSwitch.append(temp)
         self.possibleSwitch.append(["All light"])
         self.possibleSwitch.append(["All laser"])
+        self.possibleSwitch.append(["All motor"])
+        self.possibleSwitch.append(["All camera"])
         self.possibleSwitch.append(["ALL"])
 
         self.mapper =Mapper()
@@ -64,8 +66,6 @@ class Telegrambot():
         self.client.start()
         # subscribe to topic according to available device
         self.client.mySubscribe(self.overtempTopic)
-        # Add user message???
-        #MessageLoop(self.bot,self.initial_message).run_as_thread()
         MessageLoop(self.bot,self.msg_handler).run_as_thread()
         
 
@@ -97,13 +97,13 @@ class Telegrambot():
                 self.bot.sendMessage(chat_id, "Please send '/administrator' to login first!")
         elif message == "/switchon":
             if self.check_auth(chat_id)==True:
-                self.switchMode ="On"
+                self.switchMode ="on"
                 self.admin_switch_zone(chat_id)
             else:
                 self.bot.sendMessage(chat_id, "Please send '/administrator' to login first!")
         elif message == "/switchoff":
             if self.check_auth(chat_id)==True:
-                self.switchMode="Off"
+                self.switchMode="off"
                 self.admin_switch_zone(chat_id)
             else:
                 self.bot.sendMessage(chat_id, "Please send '/administrator' to login first!")
@@ -213,6 +213,10 @@ class Telegrambot():
             self.publish(target="light",switchTo=switchMode)
         elif message == "All laser":
             self.publish(target="laser",switchTo=switchMode)
+        elif message == "All motor":
+            self.publish(target="motor",switchTo=switchMode)
+        elif message == "All camera":
+            self.publish(target="camera",switchTo=switchMode)
         else:
             lights = self.zone2light[message]
             for light in lights:
