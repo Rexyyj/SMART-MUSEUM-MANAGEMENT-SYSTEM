@@ -87,7 +87,7 @@ class MsgBroker():
                 if zones[zone] == "open":
                     self.data[zone]["status"] = 1
                 elif zones[zone] == "close":
-                    self.data[zone]= 0
+                    self.data[zone]["status"]= 0
                 else:
                     pass
         else:
