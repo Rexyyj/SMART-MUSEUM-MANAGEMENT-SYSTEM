@@ -49,7 +49,8 @@ class TSchannel():
             "name": name,
             "public_flag": self.config["public_flag"],
             "field1": self.config["field1"],
-            "field2": self.config["field2"]
+            "field2": self.config["field2"],
+            "field3": self.config["field3"]
         }
         Infotext = requests.post(TSURL, data = TSobj).text
         self.ChannelInfo = json.loads(Infotext)
@@ -57,13 +58,13 @@ class TSchannel():
 
 
     # target could be crowd / light
-    def UploadData(self,crowdNum,lightNum):
+    def UploadData(self,crowdNum,lightNum,zoneStatus):
         MQTT_broker = 'mqtt.thingspeak.com'
         writeAPIKey = self.ChannelInfo['api_keys'][0]['api_key']
 
         ChannelID = self.ChannelInfo['id']
         topic = "channels/" + str(ChannelID) + "/publish/" + str(writeAPIKey)
-        payload = "field1=" + str(crowdNum) + "&field2=" + str(lightNum)
+        payload = "field1=" + str(crowdNum) + "&field2=" + str(lightNum) +"&field3=" + str(zoneStatus)
         try:
             print("Sending msg to thingSpeak...")
             publish.single(topic, payload, hostname=MQTT_broker, transport='websockets', port=80, auth={'username': 'MQTT_publisher', 'password': self.MQTT_key})

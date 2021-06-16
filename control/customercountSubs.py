@@ -10,9 +10,11 @@ from common.MyMQTT import *
 from common.Mapper import Mapper
 import json
 import datetime
+import time
+import threading
 class Customermanager():
 
-    def __init__(self,confAddr):
+    def __init__(self, confAddr):
         try:
             self.conf = json.load(open(confAddr))
         except:
@@ -23,10 +25,11 @@ class Customermanager():
         self.clientID = self.conf["serviceId"]
         self.port = self.conf["port"]
         self.topic = self.conf["topicPub"]
+        self.statusTopic = self.conf["zoneStatusTopic"]
         self.broker = self.conf["broker"]
         self.client = MyMQTT(self.clientID, self.broker, self.port, self)
         self.__msg = {"id": self.clientID,
-                      "timestamp": "","data":""}
+                      "timestamp": "", "data": ""}
         # Register service to homeCat
         regMsg = {"registerType": "service",
                   "id": self.clientID,
@@ -45,9 +48,13 @@ class Customermanager():
         self.device2zone = self.mapper.getMap_device2zone_LM(self.devices)
         # define zone counter from museum setting
         self.zone = {}
+        self.zoneStatus = {}
         for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
             self.zone[zoneDef] = 20
+            self.zoneStatus = "open"
 
+        self.zoneCapa = self.museumSetting["zones"]
+        self.pubCounter = 0
 
     def start(self):
         self.client.start()
@@ -59,16 +66,24 @@ class Customermanager():
             self.client.mySubscribe(topic)
 
     def stop(self):
-        self.workingStatus=False
+        self.workingStatus = False
         self.client.stop()
         # unregister device
         self.Reg.delete("service", self.clientID)
 
-    def publish(self, data):
+
+    def crowd_publish(self, data):
         msg = self.__msg
         msg["timestamp"] = str(datetime.datetime.now())
         msg["data"] = data
         self.client.myPublish(self.topic, msg)
+        print("Published: " + json.dumps(msg))
+
+    def status_publish(self,data):
+        msg = self.__msg
+        msg["timestamp"] = str(datetime.datetime.now())
+        msg["data"] = data
+        self.client.myPublish(self.statusTopic, msg)
         print("Published: " + json.dumps(msg))
 
     def notify(self, topic, msg):
@@ -84,7 +99,7 @@ class Customermanager():
             pass
         else:
             self.zone[self.device2zone[laserID]["enterZone"]] += enter
-        
+
         if self.device2zone[laserID]["leavingZone"] == "outdoor":
             pass
         else:
@@ -93,14 +108,12 @@ class Customermanager():
             else:
                 self.zone[self.device2zone[laserID]["leavingZone"]] = 0
 
-        self.publish(self.zone)
-        # print("Received: " + json.dumps(payload, indent=4))
-        # print("Processed: " + json.dumps(self.zone, indent=4))
-        # temp =self.zone.copy()
-        # self.client.myPublish(self.topic, json.dumps(temp))
-        # 传输topic需要跟thinkspeak
+        for key in set(self.zone.keys()):
+            if int(self.zone[key])>int(self.zoneCapa[key]):
+                self.zoneStatus[key] = "close"
 
-
+        self.crowd_publish(self.zone)
+        self.status_publish(self.zoneStatus)
 
 
 
@@ -117,5 +130,5 @@ if __name__ == "__main__":
     while (True):
         if input() == 'q':
             break
-    
+
     customermanager.stop()

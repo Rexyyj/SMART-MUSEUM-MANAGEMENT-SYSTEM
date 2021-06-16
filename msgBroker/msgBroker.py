@@ -29,6 +29,7 @@ class MsgBroker():
         self.client = MyMQTT(self.serviceID, self.broker, self.port, self)
         self.crowdTopic = self.conf["crowdTopic"]
         self.ligthTopic = self.conf["lightTopic"]
+        self.statusTopic = self.conf["statusTopic"]
 
         # Register service to homeCat
         regMsg = {"registerType": "service",
@@ -55,7 +56,7 @@ class MsgBroker():
         # init data aggregator
         self.data = {}
         for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
-            self.data[zoneDef] = {"crowd":20,"light":100}
+            self.data[zoneDef] = {"crowd":20,"light":100,"status":1}
 
         
     def start(self):
@@ -63,6 +64,7 @@ class MsgBroker():
         # subscribe to topic according to available device
         self.client.mySubscribe(self.crowdTopic)
         self.client.mySubscribe(self.ligthTopic)
+        self.client.mySubscribe(self.statusTopic)
 
     def stop(self):
         self.workingStatus=False
@@ -79,6 +81,15 @@ class MsgBroker():
             zones = payload["data"]
             for zone in set(zones.keys()):
                 self.data[zone]["crowd"]=zones[zone]
+        elif topic ==self.statusTopic:
+            zones = payload["data"]
+            for zone in set(zones.keys()):
+                if zones[zone] == "open":
+                    self.data[zone]["status"] = 1
+                elif zones[zone] == "close":
+                    self.data[zone]= 0
+                else:
+                    pass
         else:
             pass
         print(self.data)
@@ -86,7 +97,7 @@ class MsgBroker():
     def thingSpeakUploader(self):
         while self.workingStatus:
             for key in list(self.tschannels.keys()):
-                self.tschannels[key].UploadData(self.data[key]["crowd"],self.data[key]["light"])
+                self.tschannels[key].UploadData(self.data[key]["crowd"],self.data[key]["light"],self.data[key]["status"])
                 time.sleep(20)
 
 
