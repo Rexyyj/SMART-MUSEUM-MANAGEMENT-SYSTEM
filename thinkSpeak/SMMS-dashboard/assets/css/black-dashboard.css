@@ -59,7 +59,9 @@
 *::after {
   box-sizing: border-box;
 }
-
+::-webkit-scrollbar{
+  display:none;
+}
 html {
   font-family: sans-serif;
   line-height: 1.15;
@@ -2013,8 +2015,8 @@ pre code {
   .table-responsive-sm {
     display: block;
     width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: auto;
   }
 
   .table-responsive-sm>.table-bordered {
@@ -2026,7 +2028,7 @@ pre code {
   .table-responsive-md {
     display: block;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -2039,7 +2041,7 @@ pre code {
   .table-responsive-lg {
     display: block;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -2052,7 +2054,7 @@ pre code {
   .table-responsive-xl {
     display: block;
     width: 100%;
-    overflow-x: auto;
+    overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -2064,7 +2066,7 @@ pre code {
 .table-responsive {
   display: block;
   width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -6647,9 +6649,10 @@ a.close.disabled {
 .modal-scrollbar-measure {
   position: absolute;
   top: -9999px;
-  width: 50px;
-  height: 50px;
+  width: 0px;
+  height: 0px;
   overflow: scroll;
+  display: none;
 }
 
 @media (min-width: 576px) {
@@ -19259,7 +19262,7 @@ textarea.form-control:active {
   opacity: 0;
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
-  height: 15px;
+  height: 0px;
   /* there must be 'bottom' or 'top' for ps__rail-x */
   bottom: 0px;
   /* please don't change 'position' */
@@ -19271,7 +19274,7 @@ textarea.form-control:active {
   opacity: 0;
   transition: background-color .2s linear, opacity .2s linear;
   -webkit-transition: background-color .2s linear, opacity .2s linear;
-  width: 15px;
+  width: 0px;
   /* there must be 'right' or 'left' for ps__rail-y */
   right: 0;
   /* please don't change 'position' */

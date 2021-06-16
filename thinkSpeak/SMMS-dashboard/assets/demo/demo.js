@@ -355,278 +355,193 @@ demo = {
       }
     };
 
-    var ctx = document.getElementById("chartLinePurple").getContext("2d");
-
-    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
-    gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colorsleftbuttom
-
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-      datasets: [{
-        label: "Data",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#d048b6',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#d048b6',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#d048b6',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [80, 100, 70, 80, 120, 80],
-      }]
-    };
-
-    var myChart = new Chart(ctx, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipPurple
-    });
-
-
-    var ctxGreen = document.getElementById("chartLineGreen").getContext("2d");
-
-    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(66,134,121,0.15)');
-    gradientStroke.addColorStop(0.4, 'rgba(66,134,121,0.0)'); //green colors
-    gradientStroke.addColorStop(0, 'rgba(66,134,121,0)'); //green colors
-
-    var data = {
-      labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV'],
-      datasets: [{
-        label: "My First dataset",
-        fill: true,
-        backgroundColor: gradientStroke,
-        borderColor: '#00d6b4',
-        borderWidth: 2,
-        borderDash: [],
-        borderDashOffset: 0.0,
-        pointBackgroundColor: '#00d6b4',
-        pointBorderColor: 'rgba(255,255,255,0)',
-        pointHoverBackgroundColor: '#00d6b4',
-        pointBorderWidth: 20,
-        pointHoverRadius: 4,
-        pointHoverBorderWidth: 15,
-        pointRadius: 4,
-        data: [90, 27, 60, 12, 80],
-      }]
-    };
-
-    var myChart = new Chart(ctxGreen, {
-      type: 'line',
-      data: data,
-      options: gradientChartOptionsConfigurationWithTooltipGreen
-
-    });
-
-
-    var chart_labels = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-    var chart_data = [100, 70, 90, 70, 85, 60, 75, 60, 90, 80, 110, 100];
-
-
-    var ctx = document.getElementById("chartBig1").getContext('2d');
-
-    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(72,72,176,0.1)');
-    gradientStroke.addColorStop(0.4, 'rgba(72,72,176,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
-    var config = {
-      type: 'line',
-      data: {
-        labels: chart_labels,
-        datasets: [
-          {
-            label: "My First dataset",
-            fill: true,
-            backgroundColor: gradientStroke,
-            borderColor: '#d346b1',
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: '#d346b1',
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: '#d346b1',
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: chart_data,
-          },
-          {
-            label: "My Second dataset",
-            fill: true,
-            backgroundColor: gradientStroke,
-            borderColor: 'rgb(0,214,180)',
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: 'rgb(0,214,180)',
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: 'rgb(0,214,180)',
-            pointBorderWidth: 20,
-            pointHoverRadius: 4,
-            pointHoverBorderWidth: 15,
-            pointRadius: 4,
-            data: [30, 20, 60, 10, 90, 100, 150, 20, 45, 60, 25, 80],
-          }
-        ]
-      },
-      options: gradientChartOptionsConfigurationWithTooltipPurple
-    };
-    var myChartData = new Chart(ctx, config);
-    $("#0").click(function() {
-      var data = myChartData.config.data;
-      data.datasets[0].data = chart_data;
-      data.labels = chart_labels;
-      myChartData.update();
-    });
-    $("#1").click(function() {
-      var chart_data = [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120];
-      var data = myChartData.config.data;
-      data.datasets[0].data = chart_data;
-      data.labels = chart_labels;
-      myChartData.update();
-    });
-
-    $("#2").click(function() {
-      var chart_data = [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130];
-      var data = myChartData.config.data;
-      data.datasets[0].data = chart_data;
-      data.labels = chart_labels;
-      myChartData.update();
-    });
-
-    // setInterval(function() {
-    //   $.ajax({
-    //     url:"http://127.0.0.1:8090/currentcrowdchart/",
-    //     success:function(json){
-    //       let datum = JSON.parse(json);
-    //       var chart_labels = datum.mon;
-    //       var chart_data1 = datum.arr1;
-    //       var chart_data2 = datum.arr2;
-    //       console.log(datum);
+    // var ctx = document.getElementById("chartLinePurple").getContext("2d");
     //
+    // var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
     //
-    //       var ctx = document.getElementById("chartBig1").getContext('2d');
+    // gradientStroke.addColorStop(1, 'rgba(72,72,176,0.2)');
+    // gradientStroke.addColorStop(0.2, 'rgba(72,72,176,0.0)');
+    // gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colorsleftbuttom
     //
-    //       var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+    // var data = {
+    //   labels: ['JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+    //   datasets: [{
+    //     label: "Data",
+    //     fill: true,
+    //     backgroundColor: gradientStroke,
+    //     borderColor: '#d048b6',
+    //     borderWidth: 2,
+    //     borderDash: [],
+    //     borderDashOffset: 0.0,
+    //     pointBackgroundColor: '#d048b6',
+    //     pointBorderColor: 'rgba(255,255,255,0)',
+    //     pointHoverBackgroundColor: '#d048b6',
+    //     pointBorderWidth: 20,
+    //     pointHoverRadius: 4,
+    //     pointHoverBorderWidth: 15,
+    //     pointRadius: 4,
+    //     data: [80, 100, 70, 80, 120, 80],
+    //   }]
+    // };
     //
-    //       gradientStroke.addColorStop(1, 'rgba(72,72,176,0.1)');
-    //       gradientStroke.addColorStop(0.4, 'rgba(72,72,176,0.0)');
-    //       gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
-    //       var config = {
-    //         type: 'line',
-    //         data: {
-    //           labels: chart_labels,
-    //           datasets: [
-    //             {
-    //               label: "My First dataset",
-    //               fill: true,
-    //               backgroundColor: gradientStroke,
-    //               borderColor: '#d346b1',
-    //               borderWidth: 2,
-    //               borderDash: [],
-    //               borderDashOffset: 0.0,
-    //               pointBackgroundColor: '#d346b1',
-    //               pointBorderColor: 'rgba(255,255,255,0)',
-    //               pointHoverBackgroundColor: '#d346b1',
-    //               pointBorderWidth: 20,
-    //               pointHoverRadius: 4,
-    //               pointHoverBorderWidth: 15,
-    //               pointRadius: 4,
-    //               data: chart_data1,
-    //             },
-    //             {
-    //               label: "My Second dataset",
-    //               fill: true,
-    //               backgroundColor: gradientStroke,
-    //               borderColor: 'rgb(0,214,180)',
-    //               borderWidth: 2,
-    //               borderDash: [],
-    //               borderDashOffset: 0.0,
-    //               pointBackgroundColor: 'rgb(0,214,180)',
-    //               pointBorderColor: 'rgba(255,255,255,0)',
-    //               pointHoverBackgroundColor: 'rgb(0,214,180)',
-    //               pointBorderWidth: 20,
-    //               pointHoverRadius: 4,
-    //               pointHoverBorderWidth: 15,
-    //               pointRadius: 4,
-    //               data: chart_data2,
-    //             }
-    //           ]
-    //         },
-    //         options: gradientChartOptionsConfigurationWithTooltipPurple
-    //       };
-    //       var myChartData = new Chart(ctx, config);
-    //       $("#0").click(function() {
-    //         var data = myChartData.config.data;
-    //         data.datasets[0].data = chart_data;
-    //         data.labels = chart_labels;
-    //         myChartData.update();
-    //       });
-    //       $("#1").click(function() {
-    //         var chart_data = [80, 120, 105, 110, 95, 105, 90, 100, 80, 95, 70, 120];
-    //         var data = myChartData.config.data;
-    //         data.datasets[0].data = chart_data;
-    //         data.labels = chart_labels;
-    //         myChartData.update();
-    //       });
-    //
-    //       $("#2").click(function() {
-    //         var chart_data = [60, 80, 65, 130, 80, 105, 90, 130, 70, 115, 60, 130];
-    //         var data = myChartData.config.data;
-    //         data.datasets[0].data = chart_data;
-    //         data.labels = chart_labels;
-    //         myChartData.update();
-    //       });
-    //
-    //     }
-    //   })
-    // },5000);
-
-    
-
-
-    var ctx = document.getElementById("CountryChart").getContext("2d");
-
-    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke.addColorStop(1, 'rgba(29,140,248,0.2)');
-    gradientStroke.addColorStop(0.4, 'rgba(29,140,248,0.0)');
-    gradientStroke.addColorStop(0, 'rgba(29,140,248,0)'); //blue colors
-
-
     // var myChart = new Chart(ctx, {
-    //   type: 'bar',
-    //   responsive: true,
-    //   legend: {
-    //     display: false
-    //   },
-    //   data: {
-    //     labels: ['USA', 'GER', 'AUS', 'UK', 'RO', 'BR'],
-    //     datasets: [{
-    //       label: "Countries",
-    //       fill: true,
-    //       backgroundColor: gradientStroke,
-    //       hoverBackgroundColor: gradientStroke,
-    //       borderColor: '#1f8ef1',
-    //       borderWidth: 2,
-    //       borderDash: [],
-    //       borderDashOffset: 0.0,
-    //       data: [53, 20, 10, 80, 100, 45],
-    //     }]
-    //   },
-    //   options: gradientBarChartConfiguration
+    //   type: 'line',
+    //   data: data,
+    //   options: gradientChartOptionsConfigurationWithTooltipPurple
     // });
+
+    setTimeout(function () {
+      $.ajax({
+        url:"http://127.0.0.1:8090/historical/total/",
+        success:function(json){
+          var ctxGreen = document.getElementById("chartLineGreen").getContext("2d");
+
+          var gradientStroke = ctxGreen.createLinearGradient(0, 230, 0, 50);
+
+          gradientStroke.addColorStop(1, 'rgba(66,134,121,0.15)');
+          gradientStroke.addColorStop(0.4, 'rgba(66,134,121,0.0)'); //green colors
+          gradientStroke.addColorStop(0, 'rgba(66,134,121,0)'); //green colors
+
+          let histotal = JSON.parse(json);
+          let labels = histotal["name"];
+          let numbers = histotal["data"];
+
+          var data = {
+            labels: labels,
+            datasets: [{
+              label: "Crowd number in that time",
+              fill: true,
+              backgroundColor: gradientStroke,
+              borderColor: '#00d6b4',
+              borderWidth: 2,
+              borderDash: [],
+              borderDashOffset: 0.0,
+              pointBackgroundColor: '#00d6b4',
+              pointBorderColor: 'rgba(255,255,255,0)',
+              pointHoverBackgroundColor: '#00d6b4',
+              pointBorderWidth: 20,
+              pointHoverRadius: 4,
+              pointHoverBorderWidth: 15,
+              pointRadius: 4,
+              data: numbers,
+            }]
+          };
+
+          var myChart = new Chart(ctxGreen, {
+            type: 'line',
+            data: data,
+            options: gradientChartOptionsConfigurationWithTooltipGreen
+
+          });;
+
+
+        }
+      })
+    },1);
+
+
+    setTimeout(function() {
+      $.ajax({
+        url:"http://127.0.0.1:8090/historical/zone1",
+        success:function(json){
+          let datum = JSON.parse(json);
+          var chart_labels = datum["name"];
+          var chart_data1 = datum["data"];
+          var chart_data2 = datum["data"];
+          // console.log(datum);
+
+
+          var ctx = document.getElementById("chartBig1").getContext('2d');
+
+          var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50);
+
+          gradientStroke.addColorStop(1, 'rgba(72,72,176,0.1)');
+          gradientStroke.addColorStop(0.4, 'rgba(72,72,176,0.0)');
+          gradientStroke.addColorStop(0, 'rgba(119,52,169,0)'); //purple colors
+          var config = {
+            type: 'line',
+            data: {
+              labels: chart_labels,
+              datasets: [
+                {
+                  label: "Average Number in this time",
+                  fill: true,
+                  backgroundColor: gradientStroke,
+                  borderColor: '#d346b1',
+                  borderWidth: 2,
+                  borderDash: [],
+                  borderDashOffset: 0.0,
+                  pointBackgroundColor: '#d346b1',
+                  pointBorderColor: 'rgba(255,255,255,0)',
+                  pointHoverBackgroundColor: '#d346b1',
+                  pointBorderWidth: 20,
+                  pointHoverRadius: 4,
+                  pointHoverBorderWidth: 15,
+                  pointRadius: 4,
+                  data: chart_data1,
+                },
+
+              ]
+            },
+            options: gradientChartOptionsConfigurationWithTooltipPurple
+          };
+          var myChartData = new Chart(ctx, config);
+          $("#0").click(function() {
+            var chart_data = chart_data1;
+            var data = myChartData.config.data;
+            data.datasets[0].data = chart_data;
+            data.labels = chart_labels;
+            myChartData.update();
+          });
+          $("#1").click(function() {
+            $.ajax(
+                {
+                  url:"http://127.0.0.1:8090/historical/zone2",
+                  success:function(json) {
+                    let datum1 = JSON.parse(json);
+                    var chart_data2 = datum1["data"];
+                    var chart_data = chart_data2;
+                    var data = myChartData.config.data;
+                    data.datasets[0].data = chart_data;
+                    data.labels = chart_labels;
+                    myChartData.update();
+                  }})
+          });
+
+          $("#2").click(function() {
+            $.ajax(
+                {
+                  url:"http://127.0.0.1:8090/historical/zone3",
+                  success:function(json) {
+                    let datum2 = JSON.parse(json);
+                    var chart_data3 = datum2["data"];
+                    var chart_data = chart_data3;
+                    var data = myChartData.config.data;
+                    data.datasets[0].data = chart_data;
+                    data.labels = chart_labels;
+                    myChartData.update();
+                  }})
+          });
+
+          $("#3").click(function() {
+            $.ajax(
+                {
+                  url:"http://127.0.0.1:8090/historical/zone4",
+                  success:function(json) {
+                    let datum3 = JSON.parse(json);
+                    var chart_data4 = datum3["data"];
+                    var chart_data = chart_data4;
+                    var data = myChartData.config.data;
+                    data.datasets[0].data = chart_data;
+                    data.labels = chart_labels;
+                    myChartData.update();
+                  }})
+          });
+
+        }
+      })
+    },1);
+
     setTimeout(function () {
       $.ajax({
         url:"http://127.0.0.1:8090/current/",
@@ -652,7 +567,7 @@ demo = {
             data: {
               labels: labels,
               datasets: [{
-                label: "Name",
+                label: "Number",
                 fill: true,
                 backgroundColor: gradientStroke,
                 hoverBackgroundColor: gradientStroke,
@@ -696,7 +611,7 @@ demo = {
             data: {
               labels: labels,
               datasets: [{
-                label: "Name",
+                label: "Number",
                 fill: true,
                 backgroundColor: gradientStroke,
                 hoverBackgroundColor: gradientStroke,
@@ -715,7 +630,68 @@ demo = {
       })
     },5000);
 
-    
+
+      $.ajax({
+        url:"http://127.0.0.1:8090/total/",
+        success:function(data){
+          // var ctx = document.getelementbyid("totalnumber");
+          $('#TotalNumber').text(new String(data));
+          console.log(data);
+
+        }
+      })
+
+    setInterval(function (){
+      $.ajax({
+        url:"http://127.0.0.1:8090/total/",
+        success:function(data){
+          // var ctx = document.getelementbyid("totalnumber");
+          $('#TotalNumber').text(new String(data));
+          console.log(data);
+
+        }
+      })
+    },5000)
+
+
+    $.ajax({
+      url: "http://127.0.0.1:8090/status/",
+      success:function (json){
+        let lightinfo = JSON.parse(json)
+
+        for (let i in lightinfo) { $('#StatusTable').append(`<tr><td>${lightinfo[i]["name"]}</td><td class="text-center">${lightinfo[i]["status"]}</td></tr>`);
+          console.log(lightinfo[i]);
+        }
+
+      }
+    })
+
+    // setInterval(function (){
+    //   $.ajax({
+    //     url: "http://127.0.0.1:8090/status/",
+    //     success:function (json){
+    //       let lightinfo = JSON.parse(json)
+    //
+    //       for (let i in lightinfo) { $('#StatusTable').append(`<tr><td>${lightinfo[i]["name"]}</td><td class="text-center">${lightinfo[i]["status"]}</td></tr>`);
+    //         console.log(lightinfo[i]);
+    //       }
+    //
+    //     }
+    //   })
+    // },5000)
+
+    $.ajax({
+      url: "http://127.0.0.1:8090/light/",
+      success:function (json){
+        let lightinfo = JSON.parse(json)
+
+      for (let i in lightinfo) { $('#TableID').append(`<tr><td>${lightinfo[i]["name"]}</td><td class="text-center">${lightinfo[i]["light"]}</td></tr>`);
+        console.log(lightinfo[i]);
+      }
+
+      }
+      })
+
 
   },
 
