@@ -51,7 +51,7 @@ class Customermanager():
         self.zoneStatus = {}
         for zoneDef in (set(self.museumSetting["zones"].keys())-{"outdoor"}):
             self.zone[zoneDef] = 20
-            self.zoneStatus = "open"
+            self.zoneStatus[zoneDef] = "open"
 
         self.zoneCapa = self.museumSetting["zones"]
         self.pubCounter = 0
