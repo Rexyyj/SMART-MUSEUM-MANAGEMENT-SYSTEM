@@ -3,7 +3,7 @@ import requests
 import time
 import ast
 def main():
-    TSinfo = TSchannel('Account.json')
+    TSinfo = TSchannel(confAddr="./thingSpeakConfig.json")
 
     while (True):
         ChannelsInfo = TSinfo.GetChannelList().json()
