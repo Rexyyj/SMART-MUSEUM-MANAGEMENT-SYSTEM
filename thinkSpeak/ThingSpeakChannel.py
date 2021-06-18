@@ -91,6 +91,7 @@ class TSchannel():
         listURL = self.URL + '.json'
         ChannelList = requests.get(listURL, data = self.API_key).text
         print(ChannelList)
+        return ChannelList
 
 
 
