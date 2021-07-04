@@ -81,7 +81,7 @@ class Lightcontrol():
     def notify(self,topic,msg):
         
         payload=json.loads(msg)["data"]
-        print(payload) 
+        print("Received: "+str(payload)) 
         timeH = int(datetime.datetime.now().hour)
         for zone in set(payload.keys()):
             brightness = self.judege_light_brightness(timeH,payload[zone],self.zones[zone])
