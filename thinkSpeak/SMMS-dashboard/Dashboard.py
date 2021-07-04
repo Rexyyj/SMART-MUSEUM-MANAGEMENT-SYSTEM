@@ -4,9 +4,9 @@ import requests
 import ast
 import cherrypy
 import threading
-from pyspark import SparkConf,SparkContext
-conf = SparkConf().setAppName("HOUR")
-sc = SparkContext(conf=conf)
+# from pyspark import SparkConf,SparkContext
+# conf = SparkConf().setAppName("HOUR")
+# sc = SparkContext(conf=conf)
 import time
 import os
 
@@ -27,6 +27,7 @@ class Dashboard(object):
 		self.TotalCrowd = 0
 		self.STAdictlist = [None]*self.Num_of_Zones
 		self.STAdictTotal = {}
+		self.Hourlist = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
 		# for i in range (self.Num_of_Zones):
 		# 	self.Crowdlist.append(int(0))
 		# 	self.Lightlist.append(float(0))
@@ -45,17 +46,19 @@ class Dashboard(object):
 				return str(Total)
 			elif path[0] == 'historical':
 				if path[1] == 'total':
-					time = list(self.STAdictTotal.keys())
-					number = list(self.STAdictTotal.values())
-					dict_total = {'name':time, 'data':number}
-					return json.dumps(dict_total)
+					return json.dumps(self.STAdictTotal)
+					# time = list(self.STAdictTotal.keys())
+					# number = list(self.STAdictTotal.values())
+					# dict_total = {'name':time, 'data':number}
+					# return json.dumps(dict_total)
 				else:
 					for s in range(self.Num_of_Zones):
 						if path[1] == namelist[s]:
-							NAME = list(self.STAdictlist[s].keys())
-							VALUE = list(self.STAdictlist[s].values())
-							dict_sta = {'name':NAME, 'data':VALUE}
-							return json.dumps(dict_sta)
+							return json.dumps(self.STAdictlist[s])
+							# NAME = list(self.STAdictlist[s].keys())
+							# VALUE = list(self.STAdictlist[s].values())
+							# dict_sta = {'name':NAME, 'data':VALUE}
+							# return json.dumps(dict_sta)
 			elif path[0] == 'light':
 				lightstatuslist = [{}]*self.Num_of_Zones
 				for i in range(self.Num_of_Zones):
@@ -81,7 +84,38 @@ class Dashboard(object):
 			self.Num_of_Zones = len(self.UersInfo.GetChannelList().json())
 			self.GetChannelsID()
 			self.GetChannelsNames()
-			TotalRDD = sc.emptyRDD()
+			STAtotal = [0]*24
+
+			URL = 'https://thingspeak.com/channels/1421349/feeds.json'
+			feeds = requests.get(URL).json()['feeds']
+
+			for i in range(self.Num_of_Zones):
+				List_spec_zone = []
+				List_spec_zone_data = []
+				for j in range(len(feeds)):
+					if feeds[j]['field2'] == self.Namelist[i]:
+						List_spec_zone.append(feeds[j])
+				for Hour in self.Hourlist:
+					avgt = 0
+					counter = 0
+					for dic in List_spec_zone:
+						if dic['field1'] == Hour:
+							avgt += int(dic['field3'])
+							counter += 1
+					if counter > 0:
+						PPtime = int(avgt / counter)
+					else:
+						PPtime = 0
+					List_spec_zone_data.append(str(PPtime))
+				STAdict = {"name": self.Hourlist, "data": List_spec_zone_data}
+				self.STAdictlist[i] = STAdict
+
+			for hour in range(24):
+				for k in range(self.Num_of_Zones):
+					STAtotal[hour] += int(self.STAdictlist[k]["data"][hour])
+
+			self.STAdictTotal = {"name":self.Hourlist, "data":STAtotal}
+			"""TotalRDD = sc.emptyRDD()
 			for i in range (self.Num_of_Zones):
 				filename = self.Namelist[i] + '.csv'
 				rdd = sc.textFile(filename).map(lambda l: l.split(',')).filter(lambda l: l[2] != 'field1')
@@ -96,7 +130,7 @@ class Dashboard(object):
 
 
 			STATotalRDD = TotalRDD.reduceByKey(lambda v1, v2: v1 + v2).sortByKey()
-			self.STAdictTotal = STATotalRDD.collectAsMap()
+			self.STAdictTotal = STATotalRDD.collectAsMap()"""
 			time.sleep(60)
 
 	def GetChannelsID(self):
