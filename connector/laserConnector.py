@@ -77,7 +77,7 @@ class LaserConnector():
           if data["target"]=="ALL" or data["target"]=="laser" or data["target"]==self.deviceId:
                 self.workingStatus = data["switchTo"]
                 print(str(self.deviceId)+" switch to "+data["switchTo"])
-        elif topic ==self.bindingTopic:
+        elif topic ==self.bindingTopic and data["id"]==self.bindingId:
             if data["targetStatus"]=="open":
                 self.bindingStatus=True
             elif data["targetStatus"]=="close":
