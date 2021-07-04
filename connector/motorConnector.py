@@ -56,7 +56,7 @@ class MotorConnector():
                 self.workingStatus = data["switchTo"]
                 print(str(self.deviceId)+" switch to "+data["switchTo"])
         elif topic == self.motorTopic:
-            if self.workingStatus=="on":
+            if self.workingStatus=="on" and data["id"]==self.deviceId:
                 targetStatus = data["targetStatus"]
                 self.setDoorStatus(targetStatus)
             else:
