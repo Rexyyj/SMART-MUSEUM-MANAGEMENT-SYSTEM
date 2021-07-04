@@ -119,9 +119,9 @@ class LaserConnector():
                     if self.bindingStatus:
                         counter = counter + 1
                         if counter < 10:
-                            self.publish(int(gauss(10, 5)), int(gauss(3, 2)))
+                            self.publish(int(gauss(5, 2)), int(gauss(5, 3)))
                         elif counter < 20:
-                            self.publish(int(gauss(3, 2)), int(gauss(10, 5)))
+                            self.publish(int(gauss(5, 3)), int(gauss(5, 2)))
                         else:
                             counter = 0
                         time.sleep(10)
@@ -129,7 +129,7 @@ class LaserConnector():
                         if counter < 10:
                             self.publish(0, int(gauss(3, 2)))
                         elif counter < 20:
-                            self.publish(0, int(gauss(10, 5)))
+                            self.publish(0, int(gauss(5, 3)))
                         else:
                             counter = 0
                         time.sleep(10)
