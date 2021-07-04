@@ -112,26 +112,17 @@ class LaserConnector():
                     time.sleep(10)
 
     def automatic(self):
-        counter = 0
         try:
             while True:
                 if self.workingStatus=="on":
                     if self.bindingStatus:
                         counter = counter + 1
                         if counter < 10:
-                            self.publish(int(gauss(5, 2)), int(gauss(5, 3)))
-                        elif counter < 20:
-                            self.publish(int(gauss(5, 3)), int(gauss(5, 2)))
-                        else:
-                            counter = 0
+                            val = int(gauss(5, 3))
+                            self.publish(val,val)
                         time.sleep(10)
                     else:
-                        if counter < 10:
-                            self.publish(0, int(gauss(3, 2)))
-                        elif counter < 20:
-                            self.publish(0, int(gauss(5, 3)))
-                        else:
-                            counter = 0
+                        self.publish(0, 0)
                         time.sleep(10)
                 else:
                     pass

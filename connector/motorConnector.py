@@ -73,7 +73,12 @@ if __name__ == "__main__":
     if len(configFile) == 0:
         configFile = "./configs/motorConfig.json"
     motorConnector = MotorConnector(configFile)
-    motorConnector.start()
+    mode = input("Enter the mode of motor:(default is normal)")
+    if mode == "Exit" or mode=="Enter":
+        print("Motor set to "+mode+" mode...")
+    else:
+        print("Motor set to normal mode...")
+        motorConnector.start()
     print("Motor connector is running...")
 
     while True:
