@@ -116,10 +116,8 @@ class LaserConnector():
             while True:
                 if self.workingStatus=="on":
                     if self.bindingStatus:
-                        counter = counter + 1
-                        if counter < 10:
-                            val = int(gauss(5, 3))
-                            self.publish(val,val)
+                        val = int(gauss(5, 3))
+                        self.publish(val,val)
                         time.sleep(10)
                     else:
                         self.publish(0, 0)
