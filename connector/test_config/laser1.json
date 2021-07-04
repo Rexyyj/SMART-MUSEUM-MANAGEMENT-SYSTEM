@@ -10,5 +10,7 @@
     "homeCatAddress": "http://172.17.0.2:8090",
     "bindingDevType":"motor",
     "bindingDevId":"motor1",
-    "bindingDevTopic":"/Polito/iot/SMMS/museum01/floor1/motor"
+    "bindingDevTopic":"/Polito/iot/SMMS/museum01/floor1/motor",
+    "generate_avg":8,
+    "generate_std":3
   }

@@ -33,6 +33,9 @@ class LaserConnector():
         self.bindingId= self.conf["bindingDevId"]
         self.bindingStatus = True
 
+        self.generate_avg = int(self.conf["generate_avg"])
+        self.generate_std = int(self.conf["generate_std"])
+
         regMsg = {"registerType": "device",
                   "id": self.deviceId,
                   "type": "laser",
@@ -116,7 +119,7 @@ class LaserConnector():
             while True:
                 if self.workingStatus=="on":
                     if self.bindingStatus:
-                        val = int(gauss(5, 3))
+                        val = int(gauss(self.generate_avg, self.generate_std))
                         self.publish(val,val)
                         time.sleep(10)
                     else:
