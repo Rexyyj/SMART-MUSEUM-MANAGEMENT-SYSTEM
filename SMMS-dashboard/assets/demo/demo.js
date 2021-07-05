@@ -508,36 +508,6 @@ demo = {
                   }})
           });
 
-          $("#2").click(function() {
-            $.ajax(
-                {
-                  url:"http://127.0.0.1:8090/historical/zone3",
-                  success:function(json) {
-                    let datum2 = JSON.parse(json);
-                    var chart_data3 = datum2["data"];
-                    var chart_data = chart_data3;
-                    var data = myChartData.config.data;
-                    data.datasets[0].data = chart_data;
-                    data.labels = chart_labels;
-                    myChartData.update();
-                  }})
-          });
-
-          $("#3").click(function() {
-            $.ajax(
-                {
-                  url:"http://127.0.0.1:8090/historical/zone4",
-                  success:function(json) {
-                    let datum3 = JSON.parse(json);
-                    var chart_data4 = datum3["data"];
-                    var chart_data = chart_data4;
-                    var data = myChartData.config.data;
-                    data.datasets[0].data = chart_data;
-                    data.labels = chart_labels;
-                    myChartData.update();
-                  }})
-          });
-
         }
       })
     },1);

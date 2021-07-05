@@ -33,6 +33,7 @@ class Telegrambot():
         self.client = MyMQTT(
             self.serviceId, self.conf["broker"], int(self.conf["port"]), self)
         self.homeCatAddr = self.conf["homeCatAddress"]
+        self.webServerAddr = self.conf["webServerAddress"]
         self.overtempTopic = self.conf["overTempTopic"]
         self.switchTopic = self.conf["switchTopic"]
 
@@ -170,12 +171,10 @@ class Telegrambot():
                         )
         self.bot.sendMessage(chat_id,
                         parse_mode='Markdown',
-                        text='[See historical data](https://thingspeak.com/channels/1334459)'
+                        text="[See data]("+self.webServerAddr+")"
                         )
-        self.bot.sendMessage(chat_id,
-                        parse_mode='Markdown',
-                        text='[See current number of people in each area](https://thingspeak.com/channels/1334459)'
-                        )
+
+
     def admin_message(self,chat_id):
         mark_up = ReplyKeyboardMarkup(keyboard=[['/operate'], ['/see data']],one_time_keyboard=True)
         self.bot.sendMessage(
@@ -186,11 +185,7 @@ class Telegrambot():
         self.bot.keyboardRow = 2
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(
-                text='Historical data', url='https://thingspeak.com/channels/1334459')],
-            [InlineKeyboardButton(
-                text='Current number of people in each area', url='https://thingspeak.com/channels/1334459')],
-            [InlineKeyboardButton(
-                text='Total energy savings', url='https://thingspeak.com/channels/1334459')],
+                text='See data', url=self.webServerAddr)]
         ])
         self.bot.sendMessage(
         chat_id, 'What would you like to see?', reply_markup=keyboard)
