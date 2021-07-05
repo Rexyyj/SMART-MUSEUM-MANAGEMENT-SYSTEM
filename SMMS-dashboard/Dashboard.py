@@ -79,7 +79,7 @@ class Dashboard(object):
     def Statistic(self):
 
         while (True):
-            self.Num_of_Zones = len(self.UersInfo.GetChannelList().json())
+            self.Num_of_Zones = len(json.loads(self.UersInfo.GetChannelList()))
             self.GetChannelsID()
             self.GetChannelsNames()
             STAtotal = [0]*24

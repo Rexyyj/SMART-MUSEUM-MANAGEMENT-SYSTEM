@@ -392,7 +392,7 @@ demo = {
 
     setTimeout(function () {
       $.ajax({
-        url:"http://127.0.0.1:8090/historical/total/",
+        url:"http://192.168.1.101:8090/historical/total/",
         success:function(json){
           var ctxGreen = document.getElementById("chartLineGreen").getContext("2d");
 
@@ -442,7 +442,7 @@ demo = {
 
     setTimeout(function() {
       $.ajax({
-        url:"http://127.0.0.1:8090/historical/zone1",
+        url:"http://192.168.1.101:8090/historical/zone1",
         success:function(json){
           let datum = JSON.parse(json);
           var chart_labels = datum["name"];
@@ -496,7 +496,7 @@ demo = {
           $("#1").click(function() {
             $.ajax(
                 {
-                  url:"http://127.0.0.1:8090/historical/zone2",
+                  url:"http://192.168.1.101:8090/historical/zone2",
                   success:function(json) {
                     let datum1 = JSON.parse(json);
                     var chart_data2 = datum1["data"];
@@ -514,7 +514,7 @@ demo = {
 
     setTimeout(function () {
       $.ajax({
-        url:"http://127.0.0.1:8090/current/",
+        url:"http://192.168.1.101:8090/current/",
         success:function(json){
           var ctx = document.getElementById("CountryChart").getContext("2d");
 
@@ -558,7 +558,7 @@ demo = {
 
     setInterval(function () {
       $.ajax({
-        url:"http://127.0.0.1:8090/current/",
+        url:"http://192.168.1.101:8090/current/",
         success:function(json){
           var ctx = document.getElementById("CountryChart").getContext("2d");
 
@@ -602,7 +602,7 @@ demo = {
 
 
       $.ajax({
-        url:"http://127.0.0.1:8090/total/",
+        url:"http://192.168.1.101:8090/total/",
         success:function(data){
           // var ctx = document.getelementbyid("totalnumber");
           $('#TotalNumber').text(new String(data));
@@ -613,7 +613,7 @@ demo = {
 
     setInterval(function (){
       $.ajax({
-        url:"http://127.0.0.1:8090/total/",
+        url:"http://192.168.1.101:8090/total/",
         success:function(data){
           // var ctx = document.getelementbyid("totalnumber");
           $('#TotalNumber').text(new String(data));
@@ -625,7 +625,7 @@ demo = {
 
 
     $.ajax({
-      url: "http://127.0.0.1:8090/status/",
+      url: "http://192.168.1.101:8090/status/",
       success:function (json){
         let lightinfo = JSON.parse(json)
 
@@ -651,7 +651,7 @@ demo = {
     // },5000)
 
     $.ajax({
-      url: "http://127.0.0.1:8090/light/",
+      url: "http://192.168.1.101:8090/light/",
       success:function (json){
         let lightinfo = JSON.parse(json)
 

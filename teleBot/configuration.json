@@ -8,7 +8,7 @@
     "broker": "test.mosquitto.org",
     "port": 1883,
     "homeCatAddress": "http://172.17.0.2:8090",
-    "webServerAddress":"https://192.168.1.101:8090",
+    "webServerAddress":"http://192.168.1.101:8090",
     "overTempTopic":"/Polito/iot/SMMS/museum01/overtempTopic",
     "switchTopic":"/Polito/iot/SMMS/museum01/mainSwitch"
 }
