@@ -119,7 +119,7 @@ class motorcontrol():
 if __name__ == "__main__":
     configFile = input("Enter the location of configuration file: ")
     if len(configFile) == 0:
-        configFile = "./configs/motorcontrol.json"
+        configFile = "./configs/motorControl.json"
     motorcontrol = motorcontrol(configFile)
     motorcontrol.start()
     print("motor control service running...")
