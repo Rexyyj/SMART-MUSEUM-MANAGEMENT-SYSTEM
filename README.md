@@ -1,5 +1,7 @@
 # SMART-MUSEUM-MANAGEMENT-SYSTEM
 This is a student project of course "Programming for IoT applications" in Politecnico di Torino. The proposed IoT platform aims at providing services for a smart crowd management in museum.
+![oveview](figures/overview.png)
+As the figure shows, the  proposed IoT platform follows the micorservices designing pattern. Home catalog is a micro service that manage the registry of all devices and services in the system.Connectors is a set of micro services that allow simulated or real devices to connect to our platform. Control algorithm is set of micro services that analyze the sensor data and control the actuators in the system. ThingSpeak is a third party service that will help collect the system data for long term analysis. Telegram bot will be the user interface of our system. These micro services will communicate with each other with MQTT protocol or REST api.
 
 Links:
 * Promote video:
