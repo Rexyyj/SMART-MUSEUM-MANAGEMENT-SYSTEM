@@ -80,4 +80,4 @@ $ python3 Telegram.py
 $ cd dashboard
 $ python3 Dashboard.python
 ```
-Note: If you want to open the dashboard on a smartphone, the smart phone should be in the same sub-new with the host.
+Note: If you want to open the dashboard on a smartphone, the smart phone should be in the same sub-net with the host.
