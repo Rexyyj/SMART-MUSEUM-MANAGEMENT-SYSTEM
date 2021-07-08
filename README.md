@@ -4,7 +4,7 @@ This is a student project of course "Programming for IoT applications" in Polite
 As the figure shows, the  proposed IoT platform follows the micorservices designing pattern. Home catalog is a micro service that manage the registry of all devices and services in the system.Connectors is a set of micro services that allow simulated or real devices to connect to our platform. Control algorithm is set of micro services that analyze the sensor data and control the actuators in the system. ThingSpeak is a third party service that will help collect the system data for long term analysis. Telegram bot will be the user interface of our system. These micro services will communicate with each other with MQTT protocol or REST api.
 
 Links:
-* Promote video:
+* Promote video:https://youtu.be/L-L7AgrPfxY
 * Demo video: https://youtu.be/iSZdo9Ff_Rs
 * Slide:https://drive.google.com/file/d/1-7RdZlh6kCs2okBo71eJYsPS2evNAuPa/view?usp=sharing
 

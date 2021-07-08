@@ -1,2 +1,0 @@
-FROM rexyyj/smms:0.0.2
-Run apt-get install vim -y
