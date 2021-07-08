@@ -6,7 +6,7 @@ As the figure shows, the  proposed IoT platform follows the micorservices design
 Links:
 * Promote video:https://youtu.be/L-L7AgrPfxY
 * Demo video: https://youtu.be/iSZdo9Ff_Rs
-* Slide:https://drive.google.com/file/d/1-7RdZlh6kCs2okBo71eJYsPS2evNAuPa/view?usp=sharing
+* Slide:https://drive.google.com/file/d/18xH7rYk_RrIbFUhD7HaH-f-W5TV6PD5F/view?usp=sharing
 
 # Environment requirement
 * System:           Ubuntu 20.04
